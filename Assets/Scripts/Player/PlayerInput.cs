@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class PlayerInput : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private KeyCode _jumpKey;
+    [SerializeField] private float _moveDirection;
+
+    public float GetMoveDirection()
     {
-        
+        _moveDirection = Input.GetAxis("Horizontal");
+        return _moveDirection;
     }
 
-    // Update is called once per frame
-    void Update()
+    public bool GetJumpKeyDown()
     {
-        
+        return Input.GetKeyDown(_jumpKey);
     }
 }

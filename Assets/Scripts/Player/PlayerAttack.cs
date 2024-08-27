@@ -11,7 +11,8 @@ public interface IPlayerAttack
 public class PlayerAttack : MonoBehaviour, IPlayerAttack
 {
     [SerializeField] private LayerMask _enemyLayer;
-    [SerializeField] private float _enemyCheckDistance;
+    [SerializeField] private GameObject _attackObject;
+    [SerializeField] private float _attackRadius;
 
     public bool IsOnTopOfEnemy { get; private set; }
 
@@ -25,8 +26,8 @@ public class PlayerAttack : MonoBehaviour, IPlayerAttack
     /// </summary>
     public void Attack()
     {
-        RaycastHit2D ray = Physics2D.Raycast(transform.position, Vector2.down, _enemyCheckDistance, _enemyLayer);
-        if (ray.collider != null)
+        Collider2D collider = Physics2D.OverlapCircle(_attackObject.transform.position, _attackRadius, _enemyLayer);
+        if (collider != null)
         {
             IsOnTopOfEnemy = true;
         }
@@ -34,6 +35,13 @@ public class PlayerAttack : MonoBehaviour, IPlayerAttack
         {
             IsOnTopOfEnemy = false;
         }
-        Debug.DrawRay(transform.position, Vector2.down * _enemyCheckDistance, Color.red);
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(_attackObject.transform.position, _attackRadius);
+    }
+#endif
 }

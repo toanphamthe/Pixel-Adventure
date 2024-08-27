@@ -2,78 +2,90 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAnimation : MonoBehaviour
+public interface IPlayerAnimationStrategy
+{
+    void PlayAnimation(Animator animator);
+}
+
+public interface IPlayerAnimation
+{
+    void PlayAnimation(IPlayerAnimationStrategy animationStrategy);
+}
+
+public class RunAnimationStrategy: IPlayerAnimationStrategy
+{
+    private bool _value;
+
+    public RunAnimationStrategy(bool value)
+    {
+        _value = value;
+    }
+
+    public void PlayAnimation(Animator animator)
+    {
+        animator.SetBool("Run", _value);
+    }
+}
+
+public class JumpAnimationStrategy : IPlayerAnimationStrategy
+{
+    private bool _value;
+
+    public JumpAnimationStrategy(bool value)
+    {
+        _value = value;
+    }
+
+    public void PlayAnimation(Animator animator)
+    {
+        animator.SetBool("Jump", _value);
+    }
+}
+
+public class FallAnimationStrategy : IPlayerAnimationStrategy
+{
+    private bool _value;
+
+    public FallAnimationStrategy(bool value)
+    {
+        _value = value;
+    }
+
+    public void PlayAnimation(Animator animator)
+    {
+
+        animator.SetBool("Fall", _value);
+    }
+}
+
+public class TakeDamageAnimationStrategy : IPlayerAnimationStrategy
+{
+    public void PlayAnimation(Animator animator)
+    {
+        animator.SetTrigger("TakeDamage");
+    }
+}
+
+public class AppearAnimationStrategy : IPlayerAnimationStrategy
+{
+
+    public void PlayAnimation(Animator animator)
+    {
+        animator.SetTrigger("Appear");
+    }
+}
+
+public class PlayerAnimation : MonoBehaviour, IPlayerAnimation
 {
     private Animator _animator;
-    private Rigidbody2D _rigidbody2D;
-    private PlayerInput _playerInput;
-    private PlayerJump _playerJump;
 
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
-        _rigidbody2D = GetComponent<Rigidbody2D>();
-        _playerInput = GetComponent<PlayerInput>();
-        _playerJump = GetComponent<PlayerJump>();
+        _animator = GetComponentInChildren<Animator>();
     }
-
-    private void Update()
+    
+    public void PlayAnimation(IPlayerAnimationStrategy animationStrategy)
     {
-        HandleAnimation();
-    }
-
-    // Handle the player animations
-    private void HandleAnimation()
-    {
-        if (_playerInput.GetMoveDirection() != 0)
-        {
-            RunAnimation();
-        }
-        else
-        {
-            IdleAnimation();
-        }
-
-        if (_rigidbody2D.velocity.y > 0 && !_playerJump.IsGrounded)
-        {
-            JumpAnimation(true);
-        }
-        else
-        {
-           JumpAnimation(false);
-        }
-
-        if (_rigidbody2D.velocity.y < 0 && !_playerJump.IsGrounded)
-        {
-            FallAnimation(true);
-        }
-        else
-        {
-            FallAnimation(false);
-        }
-    }
-
-    // Set animator params to play the player idle animation
-    public void IdleAnimation()
-    {
-        _animator.SetBool("isRun", false);
-    }
-
-    // Set animator params to play the player run animation
-    public void RunAnimation()
-    {
-        _animator.SetBool("isRun", true);
-    }
-
-    // Set animator params to play the player jump animation
-    public void JumpAnimation(bool value)
-    {
-        _animator.SetBool("isJump", value);
-    }
-
-    // Set animator params to play the player fall animation
-    public void FallAnimation(bool value)
-    {
-        _animator.SetBool("isFall", value);
+        animationStrategy.PlayAnimation(_animator);
     }
 }

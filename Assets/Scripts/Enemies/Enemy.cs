@@ -9,10 +9,10 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] protected float _moveSpeed;
     [SerializeField] protected int _coins;
     [SerializeField] protected bool _isDead;
+    [SerializeField] protected float _destroyDelayTime;
 
     [SerializeField] private float _angleInDegrees;
     [SerializeField] private float _knockBackForce;
-    [SerializeField] private float _destroyDelayTime;
     [SerializeField] private float _rotateSpeed;
 
     [Header("Components")]
@@ -38,7 +38,7 @@ public abstract class Enemy : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Applie a rotate effect to the enemy after it die.
     /// </summary>
     protected virtual void RotateEffect()
     {

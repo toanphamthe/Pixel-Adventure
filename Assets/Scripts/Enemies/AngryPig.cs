@@ -36,7 +36,7 @@ public class AngryPig : Enemy
 
     protected override void Start()
     {
-        _isFacingRight = true;
+        
     }
 
     protected override void Update()

@@ -6,11 +6,12 @@ TagManager:
   tags:
   - Enemy
   - Trap
+  - Fruit
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Wall
   - Water
   - UI
   - Player

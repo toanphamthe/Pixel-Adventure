@@ -42,6 +42,14 @@ public class JumpAnimationStrategy : IPlayerAnimationStrategy
     }
 }
 
+public class DoubleJumpAnimationStrategy : IPlayerAnimationStrategy
+{
+    public void PlayAnimation(Animator animator)
+    {
+        animator.SetTrigger("DoubleJump");
+    }
+}
+
 public class FallAnimationStrategy : IPlayerAnimationStrategy
 {
     private bool _value;
@@ -55,6 +63,22 @@ public class FallAnimationStrategy : IPlayerAnimationStrategy
     {
 
         animator.SetBool("Fall", _value);
+    }
+}
+
+public class WallSlidingAnimationStrategy : IPlayerAnimationStrategy
+{
+    private bool _value;
+
+    public WallSlidingAnimationStrategy(bool value)
+    {
+        _value = value;
+    }
+
+    public void PlayAnimation(Animator animator)
+    {
+
+        animator.SetBool("WallSliding", _value);
     }
 }
 

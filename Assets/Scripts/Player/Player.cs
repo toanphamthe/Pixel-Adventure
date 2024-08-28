@@ -7,12 +7,12 @@ public class Player : MonoBehaviour
     [SerializeField] private int _health;
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _jumpForce;
+    [SerializeField] private int _coinsCollected;
 
     private int _currentHealth;
     private float _currentSpeed;
     private float _currentJumpForce;
 
-    private Enemy _enemy;
     private Rigidbody2D _rigidbody2D;
 
     private IPlayerAnimation _playerAnimation;
@@ -37,17 +37,39 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        Animation();
-
+        AnimationHandler();
+        Debug.Log(_rigidbody2D.velocity);
+        // Movement
         if (_rigidbody2D.bodyType == RigidbodyType2D.Dynamic)
         {
-            Movement();
-            Jump();
+            _playerMovement.Move(_playerInput.Horizontal, _currentSpeed);
+
+            _playerMovement.WallSlide();
+
+            if (_playerInput.GetJumpKeyDown)
+            {
+                // Jump and double jump
+                if (_playerMovement.IsGround)
+                {
+                    _playerMovement.Jump(_currentJumpForce);
+                    _playerMovement.IsDoubleJump = true;
+                }
+                else if (_playerMovement.IsDoubleJump && !_playerMovement.IsWallSliding)
+                {
+                    _playerMovement.Jump(_currentJumpForce);
+                    _playerMovement.IsDoubleJump = false;
+                    _playerAnimation.PlayAnimation(new DoubleJumpAnimationStrategy());
+                }
+
+                // Wall jump
+                _playerMovement.WallJump();
+            }
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        // Enemy collision
         if (collision.gameObject.CompareTag("Enemy") && _playerAttack.IsOnTopOfEnemy)
         {
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
@@ -69,30 +91,33 @@ public class Player : MonoBehaviour
             }
         }
 
+        // Trap collision
         if (collision.gameObject.CompareTag("Trap"))
         {
-            //TakeDamage(1);
+            
         }
     }
 
-    public void Movement()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        _playerMovement.Move(_playerInput.Horizontal, _currentSpeed);
-    }
-
-    public void Jump()
-    {
-        if (_playerInput.GetJumpKeyDown)
+        // Fruit trigger
+        if (collision.gameObject.CompareTag("Fruit"))
         {
-            _playerMovement.Jump(_currentJumpForce);
+            FruitController fruit = collision.gameObject.GetComponent<FruitController>();
+            if (fruit != null)
+            {
+                _coinsCollected += fruit.coin;
+                Destroy(collision.gameObject);
+            }
         }
     }
 
     /// <summary>
     /// Handle the player animation based on the player's movement
     /// </summary>
-    public void Animation()
+    public void AnimationHandler()
     {
+        // Run
         if (_playerInput.Horizontal != 0)
         {
             IPlayerAnimationStrategy runAnimation = new RunAnimationStrategy(true);
@@ -104,6 +129,7 @@ public class Player : MonoBehaviour
             _playerAnimation.PlayAnimation(runAnimation);
         }
 
+        // Jump
         if (_rigidbody2D.velocity.y > 0.01f)
         {
             IPlayerAnimationStrategy jumpAnimation = new JumpAnimationStrategy(true);
@@ -115,6 +141,7 @@ public class Player : MonoBehaviour
             _playerAnimation.PlayAnimation(jumpAnimation);
         }
 
+        // Fall
         if (_rigidbody2D.velocity.y < -0.01f)
         {
             IPlayerAnimationStrategy fallAnimation = new FallAnimationStrategy(true);
@@ -124,6 +151,18 @@ public class Player : MonoBehaviour
         {
             IPlayerAnimationStrategy fallAnimation = new FallAnimationStrategy(false);
             _playerAnimation.PlayAnimation(fallAnimation);
+        }
+
+        // Wall Sliding
+        if (_playerMovement.IsWallSliding && !_playerMovement.IsGround && _rigidbody2D.velocity.y < -0.01f)
+        {
+            IPlayerAnimationStrategy wallSlidingAnimation = new WallSlidingAnimationStrategy(true);
+            _playerAnimation.PlayAnimation(wallSlidingAnimation);
+        }
+        else
+        {
+            IPlayerAnimationStrategy wallSlidingAnimation = new WallSlidingAnimationStrategy(false);
+            _playerAnimation.PlayAnimation(wallSlidingAnimation);
         }
     }    
 }

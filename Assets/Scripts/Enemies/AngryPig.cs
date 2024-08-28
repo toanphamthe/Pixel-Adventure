@@ -2,17 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IAngryPigPatrol
-{
-    bool IsFacingRight { get; }
-    void Patrol();
-}
-
-public interface IAngryDie
-{
-
-}
-
 public class AngryPig : Enemy
 {
     [Header("AngryPig Stats")]

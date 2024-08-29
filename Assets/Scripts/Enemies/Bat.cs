@@ -82,7 +82,7 @@ public class Bat : Enemy
             _animator.SetBool("Idle", false);
         }
 
-        if (_playerTakeDamge.IsKnockBack)
+        if (_playerTakeDamge.IsDead)
         {
             _agent.SetDestination(_startPosition);
             _isChasing = false;

@@ -1,25 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private int _health;
-    [SerializeField] private float _moveSpeed;
-    [SerializeField] private float _jumpForce;
     [SerializeField] private int _coinsCollected;
 
-    private int _currentHealth;
-    private float _currentSpeed;
-    private float _currentJumpForce;
-
     private Rigidbody2D _rigidbody2D;
+    private SpriteRenderer _spriteRenderer;
 
-    private IPlayerAnimation _playerAnimation;
-    private IPlayerInput _playerInput;
-    private IPlayerMovement _playerMovement;
-    private IPlayerAttack _playerAttack;
-    private IPlayerTakeDamage _playerTakeDamage;
+    public IPlayerAnimation _playerAnimation;
+    public IPlayerInput _playerInput;
+    public IPlayerMoveable _playerMovement;
+    public IPlayerAttack _playerAttack;
+    public IPlayerDamageable _playerTakeDamage;
 
     private void Awake()
     {
@@ -29,20 +24,22 @@ public class Player : MonoBehaviour
         _playerTakeDamage = GetComponent<PlayerTakeDamage>();
         _playerAnimation = GetComponent<PlayerAnimation>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+    }
 
-        _currentHealth = _health;
-        _currentSpeed = _moveSpeed;
-        _currentJumpForce = _jumpForce;
+    private void Start()
+    {
+
     }
 
     private void Update()
     {
+        // Old
         AnimationHandler();
-        Debug.Log(_rigidbody2D.velocity);
         // Movement
         if (_rigidbody2D.bodyType == RigidbodyType2D.Dynamic)
         {
-            _playerMovement.Move(_playerInput.Horizontal, _currentSpeed);
+            _playerMovement.Move();
 
             _playerMovement.WallSlide();
 
@@ -51,12 +48,12 @@ public class Player : MonoBehaviour
                 // Jump and double jump
                 if (_playerMovement.IsGround)
                 {
-                    _playerMovement.Jump(_currentJumpForce);
+                    _playerMovement.Jump();
                     _playerMovement.IsDoubleJump = true;
                 }
                 else if (_playerMovement.IsDoubleJump && !_playerMovement.IsWallSliding)
                 {
-                    _playerMovement.Jump(_currentJumpForce);
+                    _playerMovement.Jump();
                     _playerMovement.IsDoubleJump = false;
                     _playerAnimation.PlayAnimation(new DoubleJumpAnimationStrategy());
                 }
@@ -77,13 +74,13 @@ public class Player : MonoBehaviour
             {
                 enemy.Die();
             }
-            _playerMovement.Jump(_currentJumpForce);
+            _playerMovement.Jump();
         }
         else if (collision.gameObject.CompareTag("Enemy") && !_playerAttack.IsOnTopOfEnemy)
         {
-            if (_currentHealth > 0)
+            if (_playerTakeDamage.CurrentHealth > 0)
             {
-                _playerTakeDamage.TakeDamage(_currentHealth, 1);
+                _playerTakeDamage.Damage(1);
             }
             else
             {
@@ -94,7 +91,7 @@ public class Player : MonoBehaviour
         // Trap collision
         if (collision.gameObject.CompareTag("Trap"))
         {
-            
+
         }
     }
 
@@ -164,5 +161,5 @@ public class Player : MonoBehaviour
             IPlayerAnimationStrategy wallSlidingAnimation = new WallSlidingAnimationStrategy(false);
             _playerAnimation.PlayAnimation(wallSlidingAnimation);
         }
-    }    
+    }
 }

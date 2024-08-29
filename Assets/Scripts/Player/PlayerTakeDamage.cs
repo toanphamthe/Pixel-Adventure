@@ -3,34 +3,43 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
-public interface IPlayerTakeDamage
+public interface IPlayerDamageable
 {
-    bool IsKnockBack { get; }
-
-    void TakeDamage(int currentHealth, int amount);
+    int CurrentHealth { get; }
+    bool IsDead { get; }
+    void Damage(int damageAmount);
     void Die();
 }
 
-public class PlayerTakeDamage : MonoBehaviour, IPlayerTakeDamage
+public class PlayerTakeDamage : MonoBehaviour, IPlayerDamageable
 {
+    [SerializeField] private int _maxHealth;
     [SerializeField] private float _respawnDelayTime;
     [SerializeField] private Vector2 _respawnPosition;
     [SerializeField] private float _knockBackForce;
     [SerializeField] private float _angleInDegrees;
 
     private PlayerInput _playerInput;
+    private Player _player;
     private BoxCollider2D _boxCollider2D;
     private Rigidbody2D _rigidbody2D;
 
-    public bool IsKnockBack { get; private set; }
+    public int CurrentHealth { get; private set; }
+    public bool IsDead { get; private set; }
 
     private void Awake()
     {
         _boxCollider2D = GetComponent<BoxCollider2D>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _playerInput = GetComponent<PlayerInput>();
+        _player = GetComponent<Player>();
+    }
 
+    private void Start()
+    {
+        CurrentHealth = _maxHealth;
         _respawnPosition = transform.position;
     }
 
@@ -39,9 +48,9 @@ public class PlayerTakeDamage : MonoBehaviour, IPlayerTakeDamage
     /// </summary>
     /// <param name="currentHealth">Player's current health</param>
     /// <param name="amount">The amount of health the player loses</param>
-    public void TakeDamage(int currentHealth, int amount)
+    public void Damage(int amount)
     {
-        currentHealth -= amount;
+        CurrentHealth -= amount;
         StartCoroutine(Respawn(_respawnDelayTime));
     }
 
@@ -74,7 +83,7 @@ public class PlayerTakeDamage : MonoBehaviour, IPlayerTakeDamage
     private IEnumerator Respawn(float time)
     {
         _boxCollider2D.enabled = false;
-        IsKnockBack = true;
+        IsDead = true;
         _playerInput.DisableInput();
         KnockBack();
 
@@ -86,6 +95,6 @@ public class PlayerTakeDamage : MonoBehaviour, IPlayerTakeDamage
         _boxCollider2D.enabled = true;
         transform.position = _respawnPosition;
         _playerInput.EnableInput();
-        IsKnockBack = false;
+        IsDead = false;
     }
 }

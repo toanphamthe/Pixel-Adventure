@@ -2,22 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IPlayerMovement
+public interface IPlayerMoveable
 {
+    bool IsWallJumping { get; }
     bool IsWallSliding { get; }
-    bool IsDoubleJump { get; set; }
     bool IsGround { get; }
-    void Move(float horizontal, float moveSpeed);
-    void Jump(float jumpForce);
+    bool IsDoubleJump { get; set; }
+    void Move();
+    void Jump();
     void WallJump();
     void WallSlide();
+    void Flip();
 }
 
-public class PlayerMovement : MonoBehaviour, IPlayerMovement
+public class PlayerMovement : MonoBehaviour, IPlayerMoveable
 {
+    [Header("Movement Stats")]
+    [SerializeField] private float _moveSpeed;
+    [SerializeField] private float _jumpForce;
+
     [Header("Ground Check")]
-    [SerializeField] private float _groundCheckDistance;
     [SerializeField] private bool _isGround;
+    [SerializeField] private float _groundCheckDistance;
     [SerializeField] private LayerMask _groundLayer;
 
     [Header("Wall Slide")]
@@ -38,8 +44,10 @@ public class PlayerMovement : MonoBehaviour, IPlayerMovement
     private SpriteRenderer _spriteRenderer;
 
     private IPlayerAttack _playerAttack;
-    private IPlayerTakeDamage _playerTakeDamage;
+    private IPlayerDamageable _playerTakeDamage;
+    private IPlayerInput _playerInput;
 
+    public bool IsWallJumping => _isWallJumping;
     public bool IsWallSliding => _isWallSliding;
     public bool IsGround => _isGround;
     public bool IsDoubleJump { get; set; }
@@ -50,62 +58,59 @@ public class PlayerMovement : MonoBehaviour, IPlayerMovement
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         _playerTakeDamage = GetComponent<PlayerTakeDamage>();
         _playerAttack = GetComponent<PlayerAttack>();
+        _playerInput = GetComponent<PlayerInput>();
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         IsGrounded();
+        IsWalled();
     }
 
     /// <summary>
     /// Move the player horizontally at the certain speed and flip the sprite to left/right
     /// </summary>
-    /// <param name="horizontal">Horizontal input</param>
-    /// <param name="moveSpeed">Movement speed</param>
-    public void Move(float horizontal, float moveSpeed)
+    public void Move()
     {
-        if (!_playerTakeDamage.IsKnockBack && !_isWallJumping)
+        if (!_playerTakeDamage.IsDead && !_isWallJumping)
         {
-            _rigidbody2D.velocity = new Vector2(horizontal * moveSpeed, _rigidbody2D.velocity.y);
+            _rigidbody2D.velocity = new Vector2(_playerInput.Horizontal * _moveSpeed, _rigidbody2D.velocity.y);
         }
         else
         {
             _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _rigidbody2D.velocity.y);
         }
-        Flip(horizontal);
+        Flip();
     }
 
     /// <summary>
-    /// 
+    /// Flip the player left/right based on the input
     /// </summary>
-    /// <param name="horizontal"></param>
-
-    private void Flip(float horizontal)
+    public void Flip()
     {
-        if (horizontal > 0.01f)
+        if (_playerInput.Horizontal > 0.01f && _playerInput.Horizontal != 0)
         {
             transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
         }
-        else if (horizontal < -0.01f)
+        else if (_playerInput.Horizontal < -0.01f && _playerInput.Horizontal != 0)
         {
             transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
         }
-        
     }
 
     /// <summary>
     /// Jump the player with a jump force
     /// </summary>
     /// <param name="jumpForce">Jump force</param>
-    public void Jump(float jumpForce)
+    public void Jump()
     {
-        _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpForce);
+        _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpForce);
     }
 
     public void WallJump()
     {
         // Wall Jump
-        if (IsWallSliding)
+        if (_isWallSliding)
         {
             IsDoubleJump = false;
             _isWallJumping = true;
@@ -115,6 +120,9 @@ public class PlayerMovement : MonoBehaviour, IPlayerMovement
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     private void ResetWallJump()
     {
         _isWallJumping = false;
@@ -127,7 +135,7 @@ public class PlayerMovement : MonoBehaviour, IPlayerMovement
     /// <param name="horizontal"></param>
     public void WallSlide()
     {
-        if (IsWalled() && !_isGround)
+        if (_isWallSliding && !_isGround)
         {
             _isWallSliding = true;
             IsDoubleJump = false;
@@ -139,15 +147,16 @@ public class PlayerMovement : MonoBehaviour, IPlayerMovement
         }
     }
 
-    public bool IsWalled()
+    private void IsWalled()
     {
-        return Physics2D.OverlapCircle(_wallCheck.transform.position, _wallCheckRadius, _wallLayer);
+        _isWallSliding = Physics2D.OverlapCircle(_wallCheck.transform.position, _wallCheckRadius, _wallLayer);
+
     }
 
     /// <summary>
     /// Check if the player is touching the ground
     /// </summary>
-    public void IsGrounded()
+    private void IsGrounded()
     {
         RaycastHit2D ray = Physics2D.Raycast(transform.position, Vector2.down, _groundCheckDistance, _groundLayer);
         Debug.DrawRay(transform.position, Vector2.down * _groundCheckDistance, Color.green);

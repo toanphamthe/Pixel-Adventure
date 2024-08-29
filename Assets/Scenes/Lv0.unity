@@ -3065,10 +3065,10 @@ GameObject:
   - component: {fileID: 1504528131}
   - component: {fileID: 1504528144}
   - component: {fileID: 1504528138}
-  - component: {fileID: 1504528137}
   - component: {fileID: 1504528139}
   - component: {fileID: 1504528143}
   - component: {fileID: 1504528142}
+  - component: {fileID: 1504528137}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -3204,8 +3204,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42034942b945fae4ba4db9f433cbff68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _groundCheckDistance: 0.6
+  _moveSpeed: 5
+  _jumpForce: 10
   _isGround: 0
+  _groundCheckDistance: 0.6
   _groundLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -3227,11 +3229,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1504528130}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de730da3f8d14094ead1c93c8ba7790b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _maxHealth: 3
   _respawnDelayTime: 4
   _respawnPosition: {x: 0, y: 0}
   _knockBackForce: 5
@@ -3243,7 +3246,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1504528130}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fab4b2f3b416e2d43bc22bdc5ec49cc2, type: 3}
   m_Name: 
@@ -3265,9 +3268,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 209291b5aa6b1db45afebc783b1f5a9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 3
-  _moveSpeed: 5
-  _jumpForce: 10
   _coinsCollected: 0
 --- !u!1 &1609924641
 GameObject:

@@ -34,6 +34,7 @@ public class Player : MonoBehaviour
     private void Update()
     {
         playerStateMachine.Update();
+        Debug.Log(playerStateMachine.CurrentState);
     }
 
     private void FixedUpdate()
@@ -44,7 +45,7 @@ public class Player : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // Enemy collision
-        if (collision.gameObject.CompareTag("Enemy") && _playerAttack.IsOnTopOfEnemy)
+        if (collision.gameObject.CompareTag("Enemy") && _playerAttack.IsOnTopOfEnemy && !_playerTakeDamage.IsDead)
         {
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
             if (enemy != null)
@@ -55,14 +56,7 @@ public class Player : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Enemy") && !_playerAttack.IsOnTopOfEnemy)
         {
-            if (_playerTakeDamage.CurrentHealth > 0)
-            {
-                _playerTakeDamage.Damage(1);
-            }
-            else
-            {
-                _playerTakeDamage.Die();
-            }
+            playerStateMachine.TransitionTo(playerStateMachine.dieState);
         }
 
         // Trap collision

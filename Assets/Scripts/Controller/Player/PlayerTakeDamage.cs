@@ -20,6 +20,11 @@ public class PlayerTakeDamage : MonoBehaviour, IPlayerDamageable
     [SerializeField] private Vector2 _respawnPosition;
     [SerializeField] private float _knockBackForce;
     [SerializeField] private float _angleInDegrees;
+    [SerializeField] private Vector2 _forceDirection;
+    [SerializeField] private float _rotateSpeed;
+    [SerializeField] private bool _drawGizmos;
+    
+    private float _gravityScale;
 
     private PlayerInput _playerInput;
     private Player _player;
@@ -41,6 +46,8 @@ public class PlayerTakeDamage : MonoBehaviour, IPlayerDamageable
     {
         CurrentHealth = _maxHealth;
         _respawnPosition = transform.position;
+        _gravityScale = _rigidbody2D.gravityScale;
+        CalculateKnockBackDirection();
     }
 
     /// <summary>
@@ -67,12 +74,15 @@ public class PlayerTakeDamage : MonoBehaviour, IPlayerDamageable
     /// </summary>
     private void KnockBack()
     {
+        _rigidbody2D.AddForce(_forceDirection.normalized * _knockBackForce, ForceMode2D.Impulse);
+    }
+
+    private void CalculateKnockBackDirection()
+    {
         // Calculate the vector direction of the knockback force by using the angle in degrees
         float x = Mathf.Cos(_angleInDegrees * Mathf.Deg2Rad);
         float y = Mathf.Sin(_angleInDegrees * Mathf.Deg2Rad);
-        Vector2 forceDirection = new Vector2(x, y).normalized;
-
-        _rigidbody2D.AddForce(forceDirection * _knockBackForce, ForceMode2D.Impulse);
+        _forceDirection = new Vector2(x, y);
     }
 
     /// <summary>
@@ -85,16 +95,30 @@ public class PlayerTakeDamage : MonoBehaviour, IPlayerDamageable
         _boxCollider2D.enabled = false;
         IsDead = true;
         _playerInput.DisableInput();
+        _rigidbody2D.gravityScale = 1;
         KnockBack();
 
         yield return new WaitForSeconds(time / 2);
         _rigidbody2D.bodyType = RigidbodyType2D.Static;
+        transform.localEulerAngles = Vector3.zero;
 
         yield return new WaitForSeconds(time);
         _rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
         _boxCollider2D.enabled = true;
         transform.position = _respawnPosition;
         _playerInput.EnableInput();
+        _rigidbody2D.gravityScale = _gravityScale;
         IsDead = false;
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        if (_drawGizmos)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, transform.position + (Vector3)_forceDirection);
+        }
+    }
+#endif
 }

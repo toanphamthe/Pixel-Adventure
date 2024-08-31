@@ -34,6 +34,7 @@ public class PlayerIdleState : IState
 
     public void UpdateState()
     {
+        _playerMovement.Move();
         // Transition to walk state
         if (_playerInput.Horizontal != 0)
         {

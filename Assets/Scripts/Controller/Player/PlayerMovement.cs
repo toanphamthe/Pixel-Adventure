@@ -26,6 +26,9 @@ public class PlayerMovement : MonoBehaviour, IPlayerMoveable
     [SerializeField] private bool _isGround;
     [SerializeField] private float _groundCheckDistance;
     [SerializeField] private LayerMask _groundLayer;
+    [SerializeField] private GameObject _leftGroundCheckObject;
+    [SerializeField] private GameObject _rightGroundCheckObject;
+    [SerializeField] private bool _drawGizmos;
 
     [Header("Wall Slide")]
     [SerializeField] private bool _isWallSliding;
@@ -145,9 +148,10 @@ public class PlayerMovement : MonoBehaviour, IPlayerMoveable
     /// </summary>
     private void IsGrounded()
     {
-        RaycastHit2D ray = Physics2D.Raycast(transform.position, Vector2.down, _groundCheckDistance, _groundLayer);
+        RaycastHit2D left = Physics2D.Raycast(_leftGroundCheckObject.transform.position, Vector2.down, _groundCheckDistance, _groundLayer);
+        RaycastHit2D right = Physics2D.Raycast(_rightGroundCheckObject.transform.position, Vector2.down, _groundCheckDistance, _groundLayer);
         Debug.DrawRay(transform.position, Vector2.down * _groundCheckDistance, Color.green);
-        if (ray.collider != null) 
+        if (left.collider != null || right.collider != null) 
         {
             _isGround = true;
         }
@@ -160,9 +164,14 @@ public class PlayerMovement : MonoBehaviour, IPlayerMoveable
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        // Wall check
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(_wallCheck.transform.position, _wallCheckRadius);
+        if (_drawGizmos)
+        {
+            // Wall check
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(_wallCheck.transform.position, _wallCheckRadius);
+            Gizmos.DrawRay(_leftGroundCheckObject.transform.position, Vector3.down * _groundCheckDistance);
+            Gizmos.DrawRay(_rightGroundCheckObject.transform.position, Vector3.down * _groundCheckDistance);
+        }
     }
 #endif
 }

@@ -11,8 +11,10 @@ public interface IPlayerAttack
 public class PlayerAttack : MonoBehaviour, IPlayerAttack
 {
     [SerializeField] private LayerMask _enemyLayer;
-    [SerializeField] private GameObject _attackObject;
-    [SerializeField] private float _attackRadius;
+    [SerializeField] private GameObject _leftAttackObject;
+    [SerializeField] private GameObject _rightAttackObject;
+    [SerializeField] private float _attackCheckDistance;
+    [SerializeField] private bool _drawGizmos;
 
     public bool IsOnTopOfEnemy { get; private set; }
 
@@ -26,8 +28,9 @@ public class PlayerAttack : MonoBehaviour, IPlayerAttack
     /// </summary>
     public void Attack()
     {
-        Collider2D collider = Physics2D.OverlapCircle(_attackObject.transform.position, _attackRadius, _enemyLayer);
-        if (collider != null)
+        RaycastHit2D left = Physics2D.Raycast(_leftAttackObject.transform.position, Vector2.down, _attackCheckDistance, _enemyLayer);
+        RaycastHit2D right = Physics2D.Raycast(_rightAttackObject.transform.position, Vector2.down, _attackCheckDistance, _enemyLayer);
+        if (left.collider != null || right.collider != null)
         {
             IsOnTopOfEnemy = true;
         }
@@ -40,8 +43,12 @@ public class PlayerAttack : MonoBehaviour, IPlayerAttack
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(_attackObject.transform.position, _attackRadius);
+        if (_drawGizmos)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(_leftAttackObject.transform.position, Vector2.down * _attackCheckDistance);
+            Gizmos.DrawRay(_rightAttackObject.transform.position, Vector2.down * _attackCheckDistance);
+        }
     }
 #endif
 }

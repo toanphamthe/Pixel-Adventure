@@ -99,7 +99,7 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.11666667
-    functionName: Idle
+    functionName: AttackHandle
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

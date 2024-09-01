@@ -7,6 +7,10 @@ public class BlueBird : Enemy
     [SerializeField] private Transform[] _points;
     [SerializeField] private int _targetPoint;
     [SerializeField] private bool _isFacingRight;
+    [SerializeField] private float _minSpeedFactor;
+    [SerializeField] private float _maxSpeedFactor;
+    [SerializeField] private float _factor;
+    [SerializeField] private GameObject _blueBird;
 
     protected override void Awake()
     {
@@ -26,6 +30,7 @@ public class BlueBird : Enemy
         if (_isDead)
         {
             RotateEffect();
+            Destroy(_blueBird, _destroyDelayTime);
         }
         else
         {
@@ -35,16 +40,18 @@ public class BlueBird : Enemy
 
     public override void Die()
     {
+        _rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
         base.Die();
-        _rigidbody2D.gravityScale = 1;
     }
 
     /// <summary>
-    /// 
+    /// Handle the movement of the blue bird
     /// </summary>
     private void Fly()
     {
-        if (Vector2.Distance(transform.position, _points[_targetPoint].position) < 0.1f)
+        float distanceToTarget = Vector2.Distance(transform.position, _points[_targetPoint].position);
+
+        if (distanceToTarget < 0.1f)
         {
             _targetPoint++;
             if (_targetPoint == _points.Length)
@@ -55,7 +62,9 @@ public class BlueBird : Enemy
         }
         else
         {
-            transform.position = Vector2.MoveTowards(transform.position, _points[_targetPoint].position, _moveSpeed * Time.deltaTime);
+            float speedFactor = Mathf.Clamp(distanceToTarget / _factor, _minSpeedFactor, _maxSpeedFactor);
+            float adjustedSpeed = _moveSpeed * speedFactor;
+            transform.position = Vector2.MoveTowards(transform.position, _points[_targetPoint].position, adjustedSpeed * Time.deltaTime);
         }
     }
 

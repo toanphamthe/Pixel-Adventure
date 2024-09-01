@@ -5,16 +5,20 @@ using UnityEngine;
 
 public class Bee : Enemy
 {
-
     [Header("Bee Components")]
     [SerializeField] private float _cooldownTimer;
     [SerializeField] private float _timeElapsed;
     [SerializeField] private float _amplitude;
     [SerializeField] private GameObject _bullet;
     [SerializeField] private GameObject _bulletContainer;
+    [SerializeField] private GameObject _bulletPosition;
+    [SerializeField] private GameObject _bee;
     [SerializeField] private float _attackDelayTime;
     [SerializeField] private float _attackCurrentCount;
     [SerializeField] private float _attackCount;
+    [SerializeField] private GameObject _leftPoint;
+    [SerializeField] private GameObject _rightPoint;
+    [SerializeField] private Vector2 _targetPosition;
 
     protected override void Awake()
     {
@@ -27,6 +31,8 @@ public class Bee : Enemy
     protected override void Start()
     {
         StartCoroutine(AttackCoroutine(_attackDelayTime));
+
+        _targetPosition = GetRandomPosition();
     }
 
     protected override void Update()
@@ -34,6 +40,7 @@ public class Bee : Enemy
         if (_isDead)
         {
             RotateEffect();
+            Destroy(_bee, _destroyDelayTime);
         }
         else
         {
@@ -43,25 +50,35 @@ public class Bee : Enemy
 
     public override void Die()
     {
+        _rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
         base.Die();
-        _rigidbody2D.gravityScale = 1;
     }
 
     /// <summary>
-    /// Moves the object along the X-axis and reverses direction after a cooldown.
+    /// Handle the movement of the bee.
     /// </summary>
     private void Patrol()
     {
-        _rigidbody2D.velocity = new Vector2(_moveSpeed, _rigidbody2D.velocity.y);
-        if (_timeElapsed < _cooldownTimer)
+        if (Vector2.Distance(transform.position, _targetPosition) < 0.1f)
         {
-            _timeElapsed += Time.deltaTime;
+            _targetPosition = GetRandomPosition();
         }
         else
         {
-            _moveSpeed = -_moveSpeed;
-            _timeElapsed = 0;
+            transform.position = Vector2.MoveTowards(transform.position, _targetPosition, _moveSpeed * Time.deltaTime);
         }
+    }
+
+    /// <summary>
+    /// Get random position between two points
+    /// </summary>
+    /// <returns>Random position</returns>
+    private Vector2 GetRandomPosition()
+    {
+        float x = UnityEngine.Random.Range(_leftPoint.transform.position.x, _rightPoint.transform.position.x);
+        float y = UnityEngine.Random.Range(_leftPoint.transform.position.y, _rightPoint.transform.position.y);
+        Vector2 targetPosition = new Vector2(x, y);
+        return targetPosition;
     }
 
     /// <summary>
@@ -69,13 +86,13 @@ public class Bee : Enemy
     /// </summary>
     public void Shoot()
     {
-        Instantiate(_bullet, _bulletContainer.transform.position, Quaternion.identity, _bulletContainer.transform);
+        Instantiate(_bullet, _bulletPosition.transform.position, Quaternion.identity, _bulletContainer.transform);
     }
 
     /// <summary>
-    /// Control attack animation and reset the attack count.
+    /// Calculate attack count and set the attack animation to false when the attack count is greater than the attack count.
     /// </summary>
-    public void Idle()
+    public void AttackHandle()
     {
         _attackCurrentCount++;
         if (_attackCurrentCount > _attackCount)
@@ -86,24 +103,10 @@ public class Bee : Enemy
     }
 
     /// <summary>
-    /// Coroutine to reverse the Bee's movement after a delay.
-    /// </summary>
-    /// <param name="time">Time to wait before reversing direction.</param>
-    /// <returns>IEnumerator for the coroutine.</returns>
-    private IEnumerator Goback(float time)
-    {
-        _moveSpeed = MathF.Abs(_moveSpeed);
-
-        yield return new WaitForSeconds(time);
-
-        _moveSpeed = -_moveSpeed;
-    }
-
-    /// <summary>
     /// Coroutine to repeatedly trigger the attack animation after a specified delay.
     /// </summary>
     /// <param name="time">Delay between each attack.</param>
-    /// <returns>IEnumerator for the coroutine.</returns>
+    /// <returns>Attack coroutine</returns>
     private IEnumerator AttackCoroutine(float time)
     {
         while (true)
@@ -112,4 +115,24 @@ public class Bee : Enemy
             _animator.SetBool("Attack", true);
         }
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        
+        Vector3 size = new Vector3(
+            Mathf.Abs(_rightPoint.transform.position.x - _leftPoint.transform.position.x),
+            Mathf.Abs(_rightPoint.transform.position.y - _leftPoint.transform.position.y),
+            0);
+
+        
+        Vector3 center = new Vector3(
+            (_rightPoint.transform.position.x + _leftPoint.transform.position.x) / 2,
+            (_rightPoint.transform.position.y + _leftPoint.transform.position.y) / 2,
+            0);
+
+        Gizmos.DrawWireCube(center, size);
+    }
+#endif
 }

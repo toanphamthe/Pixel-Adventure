@@ -27,12 +27,16 @@ public abstract class Enemy : MonoBehaviour
 
     protected abstract void Update();
 
+    /// <summary>
+    /// Handle the enemy die when it collide with the player
+    /// </summary>
     public virtual void Die()
     {
         _animator.SetTrigger("Die");
         _boxCollider2D.enabled = false;
         _moveSpeed = 0f;
         _isDead = true;
+        _rigidbody2D.gravityScale = 3;
         KnockBack();
         Destroy(gameObject, _destroyDelayTime);
     }

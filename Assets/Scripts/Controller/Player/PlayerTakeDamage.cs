@@ -23,8 +23,6 @@ public class PlayerTakeDamage : MonoBehaviour, IPlayerDamageable
     [SerializeField] private Vector2 _forceDirection;
     [SerializeField] private float _rotateSpeed;
     [SerializeField] private bool _drawGizmos;
-    
-    private float _gravityScale;
 
     private PlayerInput _playerInput;
     private Player _player;
@@ -46,7 +44,6 @@ public class PlayerTakeDamage : MonoBehaviour, IPlayerDamageable
     {
         CurrentHealth = _maxHealth;
         _respawnPosition = transform.position;
-        _gravityScale = _rigidbody2D.gravityScale;
         CalculateKnockBackDirection();
     }
 
@@ -70,13 +67,16 @@ public class PlayerTakeDamage : MonoBehaviour, IPlayerDamageable
     }
 
     /// <summary>
-    /// Calculate the knockback force and apply it to the player
+    /// Add a knockback force to the player
     /// </summary>
     private void KnockBack()
     {
         _rigidbody2D.AddForce(_forceDirection.normalized * _knockBackForce, ForceMode2D.Impulse);
     }
 
+    /// <summary>
+    /// Calculate the knockback direction based on the angle in degrees
+    /// </summary>
     private void CalculateKnockBackDirection()
     {
         // Calculate the vector direction of the knockback force by using the angle in degrees
@@ -89,13 +89,12 @@ public class PlayerTakeDamage : MonoBehaviour, IPlayerDamageable
     /// Coroutine handles player respawning after taking damage.
     /// </summary>
     /// <param name="time">Respawn delay time</param>
-    /// <returns></returns>
+    /// <returns>Respawn coroutine</returns>
     private IEnumerator Respawn(float time)
     {
         _boxCollider2D.enabled = false;
         IsDead = true;
         _playerInput.DisableInput();
-        _rigidbody2D.gravityScale = 1;
         KnockBack();
 
         yield return new WaitForSeconds(time / 2);
@@ -107,7 +106,6 @@ public class PlayerTakeDamage : MonoBehaviour, IPlayerDamageable
         _boxCollider2D.enabled = true;
         transform.position = _respawnPosition;
         _playerInput.EnableInput();
-        _rigidbody2D.gravityScale = _gravityScale;
         IsDead = false;
     }
 

@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class AngryPig : Enemy
 {
+    enum AngryPigState { Idle, Patrol, Angry }
+
     [Header("AngryPig Stats")]
-    [SerializeField] private bool _isAngry;
     [SerializeField] private float _angrySpeed;
     [SerializeField] private float _idleTime;
     [SerializeField] private GameObject _groundCheck;
@@ -13,7 +14,7 @@ public class AngryPig : Enemy
     [SerializeField] private bool _isFacingRight;
     [SerializeField] private float _groundCheckRadius;
     [SerializeField] private LayerMask _groundLayer;
-    [SerializeField] private bool _isIdle;
+    [SerializeField] private AngryPigState _currentState;
 
     protected override void Awake()
     {
@@ -25,7 +26,7 @@ public class AngryPig : Enemy
 
     protected override void Start()
     {
-        
+        _currentState = AngryPigState.Patrol;
     }
 
     protected override void Update()
@@ -41,12 +42,9 @@ public class AngryPig : Enemy
         }
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
     public override void Die()
     {
-        if (_isAngry)
+        if (_currentState == AngryPigState.Angry)
         {
             base.Die();
         }
@@ -57,7 +55,7 @@ public class AngryPig : Enemy
     }
 
     /// <summary>
-    /// 
+    /// Flip the pig after idle
     /// </summary>
     private void Flip()
     {
@@ -66,50 +64,59 @@ public class AngryPig : Enemy
     }
 
     /// <summary>
-    /// 
+    /// Handle the pig patroling
     /// </summary>
     private void Patrol()
     {
-        if (_isFacingRight && !_isIdle)
+        if (_isFacingRight && _currentState != AngryPigState.Idle)
         {
             _rigidbody2D.velocity = new Vector2(_moveSpeed, _rigidbody2D.velocity.y);
         }
-        else if (!_isFacingRight && !_isIdle)
+        else if (!_isFacingRight && _currentState != AngryPigState.Idle)
         {
             _rigidbody2D.velocity = new Vector2(-_moveSpeed, _rigidbody2D.velocity.y);
         }
-        if (!_isGrounded && !_isIdle && !_isAngry)
+        if (!_isGrounded && _currentState != AngryPigState.Idle && _currentState != AngryPigState.Angry)
         {
             StartCoroutine(Idle(_idleTime));
         }
-        else if (!_isGrounded && _isAngry)
+        else if (!_isGrounded && _currentState == AngryPigState.Angry)
         {
             Flip();
         }
     }
 
     /// <summary>
-    /// 
+    /// Transite to the angry state when the player hit the pig
     /// </summary>
     private void Hit()
     {
         _moveSpeed = _angrySpeed;
         _animator.SetTrigger("Hit");
-        _isAngry = true;
+        _currentState = AngryPigState.Angry;
     }
 
+    /// <summary>
+    /// Check the enemy is grounded or not
+    /// </summary>
     private void IsGrounded()
     {
         _isGrounded = Physics2D.OverlapCircle(_groundCheck.transform.position, _groundCheckRadius, _groundLayer);
     }
 
+
+    /// <summary>
+    /// Handle the pig idle state
+    /// </summary>
+    /// <param name="time">Idle time</param>
+    /// <returns>Idle coroutine</returns>
     private IEnumerator Idle(float time)
     {
         _animator.SetBool("Idle", true);
-        _isIdle = true;
+        _currentState = AngryPigState.Idle;
         yield return new WaitForSeconds(time);
         _animator.SetBool("Idle", false);
-        _isIdle = false;
+        _currentState = AngryPigState.Patrol;
         Flip();
     }
 

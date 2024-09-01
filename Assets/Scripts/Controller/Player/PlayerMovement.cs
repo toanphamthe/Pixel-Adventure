@@ -80,6 +80,9 @@ public class PlayerMovement : MonoBehaviour, IPlayerMoveable
         Flip();
     }
 
+    /// <summary>
+    /// Stop the player movement
+    /// </summary>
     public void StopMove()
     {
         _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _rigidbody2D.velocity.y);
@@ -109,18 +112,20 @@ public class PlayerMovement : MonoBehaviour, IPlayerMoveable
         _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpForce);
     }
 
+    /// <summary>
+    /// Handle the wall jump effect
+    /// </summary>
     public void WallJump()
     {
-        // Wall Jump
         IsDoubleJump = false;
         _isWallJumping = true;
         _wallJumpDirection = -transform.localScale.x;
         _rigidbody2D.velocity = new Vector2(_wallJumpDirection * _wallJumpForce, _wallJumpForce * _forceMultipier);
-        Invoke("ResetWallJump", 0.2f);
+        Invoke(nameof(ResetWallJump), 0.2f);
     }
 
     /// <summary>
-    /// 
+    /// Make the player can jump again
     /// </summary>
     private void ResetWallJump()
     {
@@ -129,7 +134,7 @@ public class PlayerMovement : MonoBehaviour, IPlayerMoveable
     }
 
     /// <summary>
-    /// 
+    /// Handle the wall slide effect
     /// </summary>
     /// <param name="horizontal"></param>
     public void WallSlide()
@@ -137,6 +142,9 @@ public class PlayerMovement : MonoBehaviour, IPlayerMoveable
         _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, Mathf.Clamp(_rigidbody2D.velocity.y, -_wallSlidingSpeed, float.MaxValue));
     }
 
+    /// <summary>
+    /// Check if the player is touching the wall
+    /// </summary>
     private void IsWalled()
     {
         _isWallSliding = Physics2D.OverlapCircle(_wallCheck.transform.position, _wallCheckRadius, _wallLayer);

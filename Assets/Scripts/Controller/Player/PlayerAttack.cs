@@ -24,7 +24,7 @@ public class PlayerAttack : MonoBehaviour, IPlayerAttack
     }
 
     /// <summary>
-    /// 
+    /// Check if the player is on top of the enemy
     /// </summary>
     public void Attack()
     {

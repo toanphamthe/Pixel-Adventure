@@ -5,10 +5,11 @@ using UnityEngine.AI;
 
 public class Bat : Enemy
 {
-    [Header("Bat Stats")]
-    [SerializeField] private bool _isChasing;
-    [SerializeField] private float _attackRange;
+    enum BatState { Idle, Chase }
 
+    [Header("Bat Stats")]
+    [SerializeField] private float _attackRange;
+    [SerializeField] private BatState _currentState;
     [SerializeField] private Vector3 _startPosition;
     [SerializeField] private LayerMask _playerLayer;
 
@@ -27,10 +28,6 @@ public class Bat : Enemy
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _boxCollider2D = GetComponent<BoxCollider2D>();
         _agent = GetComponent<NavMeshAgent>();
-
-        _startPosition = transform.position;
-        _agent.updateRotation = false;
-        _agent.updateUpAxis = false;
     }
 
     protected override void Start()
@@ -40,6 +37,11 @@ public class Bat : Enemy
         {
             _playerTakeDamge = _player.GetComponent<PlayerTakeDamage>();
         }
+
+        _currentState = BatState.Idle;
+        _startPosition = transform.position;
+        _agent.updateRotation = false;
+        _agent.updateUpAxis = false;
     }
 
     protected override void Update()
@@ -50,7 +52,8 @@ public class Bat : Enemy
         }
         else
         {
-            ChasePlayer();
+            BatBehavior();
+            IsPlayerOnAttackRange();
         }
     }
 
@@ -64,19 +67,11 @@ public class Bat : Enemy
 
 
     /// <summary>
-    /// The enemy starts chasing the player
-    /// if they enter the attack range and returns to the start position 
-    /// when the playernis knocked back or the enemy loses the chase. 
+    /// Handle the enemy behavior
     /// </summary>
-    private void ChasePlayer()
+    private void BatBehavior()
     {
-        Collider2D collider = Physics2D.OverlapCircle(_attackObject.transform.position, _attackRange, _playerLayer);
-        if (collider)
-        {
-            _isChasing = true;
-        }
-
-        if (_isChasing)
+        if (_currentState == BatState.Chase)
         {
             _agent.SetDestination(_player.transform.position);
             _animator.SetBool("Idle", false);
@@ -85,12 +80,41 @@ public class Bat : Enemy
         if (_playerTakeDamge.IsDead)
         {
             _agent.SetDestination(_startPosition);
-            _isChasing = false;
+            _currentState = BatState.Idle;
         }
 
-        if (Vector2.Distance(transform.position, _startPosition) < 0.1f)
+        if (Vector2.Distance(transform.position, _startPosition) < 0.1f && _currentState == BatState.Idle)
         {
             _animator.SetBool("Idle", true);
+        }
+
+        Flip();
+    }
+
+    /// <summary>
+    /// Flip the enemy sprite based on the player position
+    /// </summary>
+    private void Flip()
+    {
+        if (_player.transform.position.x < transform.position.x)
+        {
+            _spriteRenderer.flipX = false;
+        }
+        else
+        {
+            _spriteRenderer.flipX = true;
+        }
+    }
+
+    /// <summary>
+    /// Check if the player is on the attack range
+    /// </summary>
+    private void IsPlayerOnAttackRange()
+    {
+        Collider2D collider = Physics2D.OverlapCircle(_attackObject.transform.position, _attackRange, _playerLayer);
+        if (collider)
+        {
+            _currentState = BatState.Chase;
         }
     }
 

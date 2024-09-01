@@ -18,7 +18,7 @@ public class PlayerInput : MonoBehaviour, IPlayerInput
     public float Horizontal { get; private set; }
     public bool GetJumpKeyDown { get; private set; }
 
-    private void Awake()
+    private void Start()
     {
         _inputEnabled = true;
     }
@@ -28,6 +28,9 @@ public class PlayerInput : MonoBehaviour, IPlayerInput
         InputHandle();
     }
 
+    /// <summary>
+    /// Handle the player input
+    /// </summary>
     private void InputHandle()
     {
         if (_inputEnabled)
@@ -42,11 +45,17 @@ public class PlayerInput : MonoBehaviour, IPlayerInput
         }
     }
 
+    /// <summary>
+    /// Enable the player input
+    /// </summary>
     public void EnableInput()
     {
         _inputEnabled = true;
     }
 
+    /// <summary>
+    /// Disable the player input
+    /// </summary>
     public void DisableInput()
     {
         _inputEnabled = false;

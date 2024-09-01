@@ -34,7 +34,6 @@ public class Player : MonoBehaviour
     private void Update()
     {
         playerStateMachine.Update();
-        Debug.Log(playerStateMachine.CurrentState);
     }
 
     private void FixedUpdate()
@@ -74,8 +73,7 @@ public class Player : MonoBehaviour
             FruitController fruit = collision.gameObject.GetComponent<FruitController>();
             if (fruit != null)
             {
-                _totalPoint += fruit.coin;
-                Destroy(collision.gameObject);
+                _totalPoint += fruit.Collect();
             }
         }
     }

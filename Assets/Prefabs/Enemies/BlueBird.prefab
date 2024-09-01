@@ -214,7 +214,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4967273613781094278}
-  m_BodyType: 0
+  m_BodyType: 2
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -268,7 +268,7 @@ BoxCollider2D:
   m_Offset: {x: -0.0014588237, y: -0.008753642}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
+    pivot: {x: 0.5, y: 0.4}
     oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
@@ -306,6 +306,10 @@ MonoBehaviour:
   - {fileID: 4083217010263116947}
   _targetPoint: 0
   _isFacingRight: 0
+  _minSpeedFactor: 0.3
+  _maxSpeedFactor: 1
+  _factor: 2
+  _blueBird: {fileID: 2171403187551450390}
 --- !u!1 &5007454204017363546
 GameObject:
   m_ObjectHideFlags: 0

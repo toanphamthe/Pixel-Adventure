@@ -6,6 +6,7 @@ public class PlayerIdleState : IState
 {
     private Player _player;
     private Rigidbody2D _rigidbody;
+
     private IPlayerAnimation _playerAnimation;
     private IPlayerInput _playerInput;
     private IPlayerMoveable _playerMovement;
@@ -22,7 +23,7 @@ public class PlayerIdleState : IState
         _playerInput = _player.GetComponent<PlayerInput>();
         _playerMovement = _player.GetComponent<PlayerMovement>();
 
-        // Play idle animation
+        //Play idle animation
         IPlayerAnimationStrategy idle = new RunAnimationStrategy(false);
         _playerAnimation.PlayAnimation(idle);
     }
@@ -42,13 +43,13 @@ public class PlayerIdleState : IState
         }
 
         // Transition to jump state
-        if (_playerInput.GetJumpKeyDown && _playerMovement.IsGround)
+        if (_playerInput.GetJumpKeyDown && _playerMovement.IsGrounded)
         {
             _player.playerStateMachine.TransitionTo(_player.playerStateMachine.jumpState);
         }
 
         // Transition to fall state
-        if (!_playerMovement.IsGround && _rigidbody.velocity.y < -0.1f)
+        if (!_playerMovement.IsGrounded && _rigidbody.velocity.y < -0.1f)
         {
             _player.playerStateMachine.TransitionTo(_player.playerStateMachine.fallState);
         }

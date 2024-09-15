@@ -1,23 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Cinemachine.CinemachineFreeLook;
 using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private int _totalPoint;
-
     private IPlayerMoveable _playerMovement;
     private IPlayerAttack _playerAttack;
     private IPlayerDamageable _playerTakeDamage;
+    private IPlayerCollectable _collectable;
+    private Diamond _diamond;
 
     public PlayerStateMachine playerStateMachine;
+
+    public ParticleSystem dustPS;
+    public ParticleSystem fallPS;
+    public ParticleSystem jumpPS;
 
     private void Awake()
     {
         _playerMovement = GetComponent<PlayerMovement>();
         _playerAttack = GetComponent<PlayerAttack>();
         _playerTakeDamage = GetComponent<PlayerTakeDamage>();
+        _diamond = GetComponent<Diamond>();
     }
 
     private void Start()
@@ -46,7 +52,7 @@ public class Player : MonoBehaviour
         // Enemy collision
         if (collision.gameObject.CompareTag("Enemy") && _playerAttack.IsOnTopOfEnemy && !_playerTakeDamage.IsDead)
         {
-            Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+            IEnemyDie enemy = collision.gameObject.GetComponent<Enemy>();
             if (enemy != null)
             {
                 enemy.Die();
@@ -55,13 +61,13 @@ public class Player : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Enemy") && !_playerAttack.IsOnTopOfEnemy)
         {
-            playerStateMachine.TransitionTo(playerStateMachine.dieState);
+            playerStateMachine.TransitionTo(playerStateMachine.takeDamageState);
         }
 
         // Trap collision
         if (collision.gameObject.CompareTag("Trap"))
         {
-
+            playerStateMachine.TransitionTo(playerStateMachine.takeDamageState);
         }
     }
 
@@ -70,10 +76,10 @@ public class Player : MonoBehaviour
         // Fruit trigger
         if (collision.gameObject.CompareTag("Fruit"))
         {
-            FruitController fruit = collision.gameObject.GetComponent<FruitController>();
-            if (fruit != null)
+            _collectable = collision.gameObject.GetComponent<FruitController>();
+            if (_collectable != null)
             {
-                _totalPoint += fruit.Collect();
+                _diamond.Increment(_collectable.Collect());
             }
         }
     }

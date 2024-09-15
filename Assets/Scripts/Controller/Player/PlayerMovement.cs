@@ -2,20 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IPlayerMoveable
-{
-    bool IsWallJumping { get; }
-    bool IsWallSliding { get; }
-    bool IsGround { get; }
-    bool IsDoubleJump { get; set; }
-    void Move();
-    void StopMove();
-    void Jump();
-    void WallJump();
-    void WallSlide();
-    void Flip();
-}
-
 public class PlayerMovement : MonoBehaviour, IPlayerMoveable
 {
     [Header("Movement Stats")]
@@ -46,6 +32,7 @@ public class PlayerMovement : MonoBehaviour, IPlayerMoveable
     [Header("Components")]
     private Rigidbody2D _rigidbody2D;
     private SpriteRenderer _spriteRenderer;
+    private Player _player;
 
     private IPlayerAttack _playerAttack;
     private IPlayerDamageable _playerTakeDamage;
@@ -53,7 +40,7 @@ public class PlayerMovement : MonoBehaviour, IPlayerMoveable
 
     public bool IsWallJumping => _isWallJumping;
     public bool IsWallSliding => _isWallSliding;
-    public bool IsGround => _isGround;
+    public bool IsGrounded => _isGround;
     public bool IsDoubleJump { get; set; }
 
     private void Awake()
@@ -63,11 +50,12 @@ public class PlayerMovement : MonoBehaviour, IPlayerMoveable
         _playerTakeDamage = GetComponent<PlayerTakeDamage>();
         _playerAttack = GetComponent<PlayerAttack>();
         _playerInput = GetComponent<PlayerInput>();
+        _player = GetComponent<Player>();
     }
 
     private void Update()
     {
-        IsGrounded();
+        GroundCheck();
         IsWalled();
     }
 
@@ -78,6 +66,15 @@ public class PlayerMovement : MonoBehaviour, IPlayerMoveable
     {
         _rigidbody2D.velocity = new Vector2(_playerInput.Horizontal * _moveSpeed, _rigidbody2D.velocity.y);
         Flip();
+
+        if (_isGround && _playerInput.Horizontal !=0 && !_player.dustPS.isPlaying)
+        {
+            _player.dustPS.Play();
+        }
+        else
+        {
+            _player.dustPS.Stop();
+        }
     }
 
     /// <summary>
@@ -96,10 +93,12 @@ public class PlayerMovement : MonoBehaviour, IPlayerMoveable
         if (_playerInput.Horizontal > 0.01f && _playerInput.Horizontal != 0)
         {
             transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
+            _player.dustPS.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
         }
         else if (_playerInput.Horizontal < -0.01f && _playerInput.Horizontal != 0)
         {
             transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
+            _player.dustPS.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
         }
     }
 
@@ -110,6 +109,7 @@ public class PlayerMovement : MonoBehaviour, IPlayerMoveable
     public void Jump()
     {
         _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpForce);
+        _player.jumpPS.Play();
     }
 
     /// <summary>
@@ -121,6 +121,7 @@ public class PlayerMovement : MonoBehaviour, IPlayerMoveable
         _isWallJumping = true;
         _wallJumpDirection = -transform.localScale.x;
         _rigidbody2D.velocity = new Vector2(_wallJumpDirection * _wallJumpForce, _wallJumpForce * _forceMultipier);
+        _player.jumpPS.Play();
         Invoke(nameof(ResetWallJump), 0.2f);
     }
 
@@ -154,7 +155,7 @@ public class PlayerMovement : MonoBehaviour, IPlayerMoveable
     /// <summary>
     /// Check if the player is touching the ground
     /// </summary>
-    private void IsGrounded()
+    private void GroundCheck()
     {
         RaycastHit2D left = Physics2D.Raycast(_leftGroundCheckObject.transform.position, Vector2.down, _groundCheckDistance, _groundLayer);
         RaycastHit2D right = Physics2D.Raycast(_rightGroundCheckObject.transform.position, Vector2.down, _groundCheckDistance, _groundLayer);

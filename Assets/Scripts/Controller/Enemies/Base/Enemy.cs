@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour, IEnemyDie
 {
     [Header("Stats")]
     [SerializeField] protected float _moveSpeed;
@@ -14,6 +14,8 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] private float _angleInDegrees;
     [SerializeField] private float _knockBackForce;
     [SerializeField] private float _rotateSpeed;
+
+    [SerializeField] protected ICameraShake _shake;
 
     [Header("Components")]
     [SerializeField] protected Rigidbody2D _rigidbody2D;
@@ -37,6 +39,7 @@ public abstract class Enemy : MonoBehaviour
         _moveSpeed = 0f;
         _isDead = true;
         _rigidbody2D.gravityScale = 3;
+        _shake.Shake();
         KnockBack();
         Destroy(gameObject, _destroyDelayTime);
     }

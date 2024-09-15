@@ -31,6 +31,7 @@ public class Chameleon : Enemy
 
     protected override void Start()
     {
+        _shake = GameObject.FindGameObjectWithTag("GameManager").GetComponent<CameraShake>();
         _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 
         _currentState = ChameleonState.Idle;
@@ -55,7 +56,7 @@ public class Chameleon : Enemy
         Collider2D attack = Physics2D.OverlapBox(_attackRange.transform.position, _attackRange.transform.localScale, 0, _playerLayer);
         if (attack != null && _isAttack)
         {
-            _player.playerStateMachine.TransitionTo(_player.playerStateMachine.dieState);
+            _player.playerStateMachine.TransitionTo(_player.playerStateMachine.takeDamageState);
         }
     }
 

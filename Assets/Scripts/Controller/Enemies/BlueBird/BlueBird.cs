@@ -22,7 +22,7 @@ public class BlueBird : Enemy
 
     protected override void Start()
     {
-
+        _shake = GameObject.FindGameObjectWithTag("GameManager").GetComponent<CameraShake>();
     }
 
     protected override void Update()

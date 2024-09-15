@@ -6,6 +6,7 @@ public class PlayerFallState : IState
 {
     private Player _player;
     private Rigidbody2D _rigibody;
+
     private IPlayerAnimation _playerAnimation;
     private IPlayerInput _playerInput;
     private IPlayerMoveable _playerMovement;
@@ -18,6 +19,7 @@ public class PlayerFallState : IState
     public void EnterState()
     {
         _rigibody = _player.GetComponent<Rigidbody2D>();
+
         _playerAnimation = _player.GetComponent<PlayerAnimation>();
         _playerInput = _player.GetComponent<PlayerInput>();
         _playerMovement = _player.GetComponent<PlayerMovement>();
@@ -43,13 +45,15 @@ public class PlayerFallState : IState
     public void UpdateState()
     {
         // Transition to idle state
-        if (_playerMovement.IsGround && _playerInput.Horizontal == 0)
+        if (_playerMovement.IsGrounded && _playerInput.Horizontal == 0)
         {
+            _player.fallPS.Play();
             _player.playerStateMachine.TransitionTo(_player.playerStateMachine.idleState);
         }
         // Transition to walk state
-        else if (_playerMovement.IsGround && _playerInput.Horizontal != 0)
+        else if (_playerMovement.IsGrounded && _playerInput.Horizontal != 0)
         {
+            _player.fallPS.Play();
             _player.playerStateMachine.TransitionTo(_player.playerStateMachine.walkState);
         }
 
@@ -60,7 +64,7 @@ public class PlayerFallState : IState
 
         }
         // Transition to wall slide state
-        if (!_playerMovement.IsGround && _playerMovement.IsWallSliding)
+        if (!_playerMovement.IsGrounded && _playerMovement.IsWallSliding)
         {
             _player.playerStateMachine.TransitionTo(_player.playerStateMachine.wallSlideState);
         }

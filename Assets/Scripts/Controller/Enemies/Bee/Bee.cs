@@ -20,16 +20,20 @@ public class Bee : Enemy
     [SerializeField] private GameObject _rightPoint;
     [SerializeField] private Vector2 _targetPosition;
 
+    [SerializeField] private BulletPool _bulletPool;
+
     protected override void Awake()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _boxCollider2D = GetComponent<BoxCollider2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
+        _bulletPool = GetComponentInChildren<BulletPool>();
     }
 
     protected override void Start()
     {
+        _shake = GameObject.FindGameObjectWithTag("GameManager").GetComponent<CameraShake>();
         StartCoroutine(AttackCoroutine(_attackDelayTime));
 
         _targetPosition = GetRandomPosition();
@@ -86,7 +90,7 @@ public class Bee : Enemy
     /// </summary>
     public void Shoot()
     {
-        Instantiate(_bullet, _bulletPosition.transform.position, Quaternion.identity, _bulletContainer.transform);
+        _bulletPool.GetPooledBullet();
     }
 
     /// <summary>

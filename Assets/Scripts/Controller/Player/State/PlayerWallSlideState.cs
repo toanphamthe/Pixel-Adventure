@@ -6,6 +6,7 @@ public class PlayerWallSlideState : IState
 {
     private Player _player;
     private Rigidbody2D _rigidbody;
+
     private IPlayerMoveable _playerMovement;
     private IPlayerAnimation _playerAnimation;
     private IPlayerInput _playerInput;
@@ -18,6 +19,7 @@ public class PlayerWallSlideState : IState
     public void EnterState()
     {
         _rigidbody = _player.GetComponent<Rigidbody2D>();
+
         _playerMovement = _player.GetComponent<PlayerMovement>();
         _playerAnimation = _player.GetComponent<PlayerAnimation>();
         _playerInput = _player.GetComponent<PlayerInput>();
@@ -69,7 +71,7 @@ public class PlayerWallSlideState : IState
             _playerAnimation.PlayAnimation(jump);
         }
 
-        if (_playerMovement.IsWallSliding && !_playerMovement.IsGround)
+        if (_playerMovement.IsWallSliding && !_playerMovement.IsGrounded)
         {
             _playerMovement.WallSlide();
         }
@@ -79,16 +81,16 @@ public class PlayerWallSlideState : IState
             _player.playerStateMachine.TransitionTo(_player.playerStateMachine.doubleJumpState);
         }
 
-        if (_playerInput.Horizontal != 0 && _playerMovement.IsGround)
+        if (_playerInput.Horizontal != 0 && _playerMovement.IsGrounded)
         {
             _player.playerStateMachine.TransitionTo(_player.playerStateMachine.walkState);
         }
-        else if (_playerInput.Horizontal == 0 && _playerMovement.IsGround)
+        else if (_playerInput.Horizontal == 0 && _playerMovement.IsGrounded)
         {
             _player.playerStateMachine.TransitionTo(_player.playerStateMachine.idleState);
         }
 
-        if (!_playerMovement.IsGround && _rigidbody.velocity.y < -0.1f && !_playerMovement.IsWallSliding)
+        if (!_playerMovement.IsGrounded && _rigidbody.velocity.y < -0.1f && !_playerMovement.IsWallSliding)
         {
             _player.playerStateMachine.TransitionTo(_player.playerStateMachine.fallState);
         }

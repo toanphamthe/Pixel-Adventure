@@ -7,7 +7,6 @@ using static UnityEditor.Experimental.GraphView.GraphView;
 
 public interface IPlayerDamageable
 {
-    int CurrentHealth { get; }
     bool IsDead { get; }
     void Damage(int damageAmount);
     void Die();
@@ -17,7 +16,6 @@ public class PlayerTakeDamage : MonoBehaviour, IPlayerDamageable
 {
     [SerializeField] private int _maxHealth;
     [SerializeField] private float _respawnDelayTime;
-    [SerializeField] private Vector2 _respawnPosition;
     [SerializeField] private float _knockBackForce;
     [SerializeField] private float _angleInDegrees;
     [SerializeField] private Vector2 _forceDirection;
@@ -28,8 +26,8 @@ public class PlayerTakeDamage : MonoBehaviour, IPlayerDamageable
     private Player _player;
     private BoxCollider2D _boxCollider2D;
     private Rigidbody2D _rigidbody2D;
-
-    public int CurrentHealth { get; private set; }
+    private CameraShake _shake;
+    private Health _health;
     public bool IsDead { get; private set; }
 
     private void Awake()
@@ -38,12 +36,12 @@ public class PlayerTakeDamage : MonoBehaviour, IPlayerDamageable
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _playerInput = GetComponent<PlayerInput>();
         _player = GetComponent<Player>();
+        _health = GetComponent<Health>();
     }
 
     private void Start()
     {
-        CurrentHealth = _maxHealth;
-        _respawnPosition = transform.position;
+        _shake = GameObject.FindGameObjectWithTag("GameManager").GetComponent<CameraShake>();
         CalculateKnockBackDirection();
     }
 
@@ -54,8 +52,9 @@ public class PlayerTakeDamage : MonoBehaviour, IPlayerDamageable
     /// <param name="amount">The amount of health the player loses</param>
     public void Damage(int amount)
     {
-        CurrentHealth -= amount;
+        _health.Decrement();
         StartCoroutine(Respawn(_respawnDelayTime));
+        _shake.Shake();
     }
 
     /// <summary>
@@ -104,7 +103,10 @@ public class PlayerTakeDamage : MonoBehaviour, IPlayerDamageable
         yield return new WaitForSeconds(time);
         _rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
         _boxCollider2D.enabled = true;
-        transform.position = _respawnPosition;
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.LoadLastCheckpoint(_player);
+        }
         _playerInput.EnableInput();
         IsDead = false;
     }

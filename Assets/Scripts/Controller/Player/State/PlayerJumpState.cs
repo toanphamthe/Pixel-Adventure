@@ -6,6 +6,7 @@ public class PlayerJumpState : IState
 {
     private Player _player;
     private Rigidbody2D _rigibody;
+
     private IPlayerAnimation _playerAnimation;
     private IPlayerInput _playerInput;
     private IPlayerMoveable _playerMovement;
@@ -18,6 +19,7 @@ public class PlayerJumpState : IState
     public void EnterState()
     {
         _rigibody = _player.GetComponent<Rigidbody2D>();
+
         _playerAnimation = _player.GetComponent<PlayerAnimation>();
         _playerInput = _player.GetComponent<PlayerInput>();
         _playerMovement = _player.GetComponent<PlayerMovement>();
@@ -48,7 +50,7 @@ public class PlayerJumpState : IState
         }
 
         // Transition to wall slide state
-        if (!_playerMovement.IsGround && _playerMovement.IsWallSliding)
+        if (!_playerMovement.IsGrounded && _playerMovement.IsWallSliding)
         {
             _player.playerStateMachine.TransitionTo(_player.playerStateMachine.wallSlideState);
         }

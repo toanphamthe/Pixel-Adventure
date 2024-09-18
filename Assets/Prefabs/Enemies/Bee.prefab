@@ -42,8 +42,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4636513985070425642}
+  - component: {fileID: 6441448559768375341}
   m_Layer: 0
-  m_Name: Bullet Position
+  m_Name: Bullet Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -58,12 +59,27 @@ Transform:
   m_GameObject: {fileID: 2646561836200864049}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.422, z: 0}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2033939208793599437}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6441448559768375341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2646561836200864049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69cab440df4c7b9449397559adc0674f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _initPoolSize: 5
+  _objectToPool: {fileID: 963136122530785845, guid: c19903c2817074c40b26a16beb8907f3, type: 3}
+  _parent: {fileID: 6631440533237136498}
 --- !u!1 &3073337213333564760
 GameObject:
   m_ObjectHideFlags: 0
@@ -154,7 +170,7 @@ Transform:
   m_GameObject: {fileID: 6631440533237136498}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.422, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -260,7 +276,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.125, y: 1.0625}
+    oldSize: {x: 2.25, y: 2.125}
     newSize: {x: 1.125, y: 1.0625}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -354,7 +370,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8c7dbf8ff05f8246923ad8ca587900a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 2
+  _moveSpeed: 3
   _coins: 13
   _isDead: 0
   _destroyDelayTime: 4
@@ -378,6 +394,7 @@ MonoBehaviour:
   _leftPoint: {fileID: 8614415267182654617}
   _rightPoint: {fileID: 3073337213333564760}
   _targetPosition: {x: 0, y: 0}
+  _bulletPool: {fileID: 0}
 --- !u!1 &8614415267182654617
 GameObject:
   m_ObjectHideFlags: 0

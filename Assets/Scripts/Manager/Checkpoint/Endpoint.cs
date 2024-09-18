@@ -1,0 +1,16 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Endpoint : MonoBehaviour
+{
+    [SerializeField] private int _levelIndex;
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            GameManager.Instance.WinGame(_levelIndex);
+        }
+    }
+}

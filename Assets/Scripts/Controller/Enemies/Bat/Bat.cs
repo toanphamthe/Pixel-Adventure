@@ -32,6 +32,7 @@ public class Bat : Enemy
 
     protected override void Start()
     {
+        _shake = GameObject.FindGameObjectWithTag("GameManager").GetComponent<CameraShake>();
         _player = GameObject.FindGameObjectWithTag("Player");
         if (_player != null)
         {
@@ -42,6 +43,7 @@ public class Bat : Enemy
         _startPosition = transform.position;
         _agent.updateRotation = false;
         _agent.updateUpAxis = false;
+        _agent.speed = _moveSpeed;
     }
 
     protected override void Update()
@@ -60,7 +62,6 @@ public class Bat : Enemy
     public override void Die()
     {
         base.Die();
-        _rigidbody2D.gravityScale = 1;
         Destroy(_batRootObject, _destroyDelayTime);
         _agent.enabled = false;
     }

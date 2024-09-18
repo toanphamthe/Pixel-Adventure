@@ -5,19 +5,32 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuButtonController : MonoBehaviour
 {
-    public void ClosePanel(GameObject panel)
-    {
-        panel.gameObject.SetActive(false);
-    }
+    [SerializeField] private List<GameObject> _level;
 
-    public void OpenPanel(GameObject panel)
+    private void Start()
     {
-        panel.gameObject.SetActive(true);
+        if (PlayerPrefs.GetInt("Lv_1_Unlocked", 0) == 0)
+        {
+            PlayerPrefs.SetInt("Lv_1_Unlocked", 1);
+            PlayerPrefs.Save();
+        }
+
+        for (int i = 1; i <= _level.Count; i++)
+        {
+            if (PlayerPrefs.GetInt("Lv_" + (i) + "_Unlocked") == 1)
+            {
+                _level[i - 1].SetActive(true);
+            }
+            else
+            {
+                _level[i - 1].SetActive(false);
+            }
+        }
     }
 
     public void StartGame(string level)
     {
-        SceneManager.LoadScene("Lv" + level);
+        SceneManager.LoadScene("Lv_" + level);
     }
 
     public void QuitGame()

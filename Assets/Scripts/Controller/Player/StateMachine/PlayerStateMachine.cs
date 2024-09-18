@@ -12,7 +12,7 @@ public class PlayerStateMachine
     public PlayerFallState fallState;
     public PlayerDoubleJumpState doubleJumpState;
     public PlayerWallSlideState wallSlideState;
-    public PlayerDieState dieState;
+    public PlayerTakeDamageState takeDamageState;
 
     public PlayerStateMachine(Player player)
     {
@@ -22,7 +22,7 @@ public class PlayerStateMachine
         this.fallState = new PlayerFallState(player);
         this.doubleJumpState = new PlayerDoubleJumpState(player);
         this.wallSlideState = new PlayerWallSlideState(player);
-        this.dieState = new PlayerDieState(player);
+        this.takeDamageState = new PlayerTakeDamageState(player);
     }
 
     public void Initialize(IState startingState)

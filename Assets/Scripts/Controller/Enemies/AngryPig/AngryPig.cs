@@ -22,10 +22,13 @@ public class AngryPig : Enemy
         _animator = GetComponentInChildren<Animator>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _boxCollider2D = GetComponent<BoxCollider2D>();
+
     }
 
     protected override void Start()
     {
+        _shake = GameObject.FindGameObjectWithTag("GameManager").GetComponent<CameraShake>();
+
         _currentState = AngryPigState.Patrol;
     }
 
@@ -114,6 +117,7 @@ public class AngryPig : Enemy
     {
         _animator.SetBool("Idle", true);
         _currentState = AngryPigState.Idle;
+        _rigidbody2D.velocity = Vector2.zero;
         yield return new WaitForSeconds(time);
         _animator.SetBool("Idle", false);
         _currentState = AngryPigState.Patrol;

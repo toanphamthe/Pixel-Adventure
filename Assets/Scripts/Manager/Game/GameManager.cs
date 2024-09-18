@@ -26,11 +26,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-
-    }
-
     public void SaveCheckpoint(Checkpoint checkpoint)
     {
         _checkedpoints = checkpoint;
@@ -43,12 +38,13 @@ public class GameManager : MonoBehaviour
 
     public void WinGame(int level)
     {
-        // Show win panel
+        if (!SceneManager.GetSceneByName("Win").isLoaded)
+        {
+            SceneManager.LoadSceneAsync("Win", LoadSceneMode.Additive);
+        }
 
-        // Save the level
         PlayerPrefs.SetInt("Lv_" + level.ToString() + "_Completed", 1);
         PlayerPrefs.SetInt("Lv_" + (level + 1).ToString() + "_Unlocked", 1);
-        SceneManager.LoadScene("Start");
         PlayerPrefs.Save();
     }
 

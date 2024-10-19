@@ -17,11 +17,18 @@ public class PlayerHealthAnimation : MonoBehaviour
         StartCoroutine(PlayAnimation());
     }
 
+    /// <summary>
+    /// Unactive the health point
+    /// </summary>
     public void DisableHealthUI()
     {
         gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Handle the animation of the health point
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator PlayAnimation()
     {
         while(true)

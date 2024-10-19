@@ -5,21 +5,22 @@ using UnityEngine;
 
 public class Bee : Enemy
 {
-    [Header("Bee Components")]
+    [Header("Bee Stats")]
     [SerializeField] private float _cooldownTimer;
     [SerializeField] private float _timeElapsed;
     [SerializeField] private float _amplitude;
+    [SerializeField] private float _attackDelayTime;
+    [SerializeField] private float _attackCurrentCount;
+    [SerializeField] private float _attackCount;
+
+    [SerializeField] private Vector2 _targetPosition;
+
+    [SerializeField] private GameObject _leftPoint;
+    [SerializeField] private GameObject _rightPoint;
     [SerializeField] private GameObject _bullet;
     [SerializeField] private GameObject _bulletContainer;
     [SerializeField] private GameObject _bulletPosition;
     [SerializeField] private GameObject _bee;
-    [SerializeField] private float _attackDelayTime;
-    [SerializeField] private float _attackCurrentCount;
-    [SerializeField] private float _attackCount;
-    [SerializeField] private GameObject _leftPoint;
-    [SerializeField] private GameObject _rightPoint;
-    [SerializeField] private Vector2 _targetPosition;
-
     [SerializeField] private BulletPool _bulletPool;
 
     protected override void Awake()

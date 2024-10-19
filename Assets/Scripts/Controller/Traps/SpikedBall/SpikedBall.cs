@@ -5,10 +5,12 @@ using UnityEngine.UIElements;
 
 public class SpikedBall : MonoBehaviour
 {
+    [Header("Spiked Ball Stats")]
+    [SerializeField] private int _numberOfLinks;
+
     [SerializeField] private Transform _spikedBall;
     [SerializeField] private GameObject _chainLinkPrefab;
     [SerializeField] private GameObject _chainContainer;
-    [SerializeField] private int _numberOfLinks;
     [SerializeField] private List<GameObject> _chainlinks = new List<GameObject>();
 
     private void Start()
@@ -21,6 +23,9 @@ public class SpikedBall : MonoBehaviour
         Chain();
     }
 
+    /// <summary>
+    /// Creates the chain of the spiked ball
+    /// </summary>
     private void CreateChain()
     {
         Vector2 direction = (_spikedBall.transform.position - transform.position).normalized;
@@ -41,6 +46,9 @@ public class SpikedBall : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Aligns the chain links between the spiked ball and the pivot object
+    /// </summary>
     private void Chain()
     {
         Vector2 direction = (_spikedBall.transform.position - transform.position).normalized;

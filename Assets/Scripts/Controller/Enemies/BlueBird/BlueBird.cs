@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class BlueBird : Enemy
 {
-    [SerializeField] private Transform[] _points;
+    [Header("BlueBird Stats")]
     [SerializeField] private int _targetPoint;
     [SerializeField] private bool _isFacingRight;
     [SerializeField] private float _minSpeedFactor;
     [SerializeField] private float _maxSpeedFactor;
     [SerializeField] private float _factor;
+
+    [SerializeField] private Transform[] _points;
     [SerializeField] private GameObject _blueBird;
 
     protected override void Awake()
@@ -68,6 +70,9 @@ public class BlueBird : Enemy
         }
     }
 
+    /// <summary>
+    /// Flip the blue bird
+    /// </summary>
     private void Flip()
     {
         _spriteRenderer.flipX = !_spriteRenderer.flipX;

@@ -26,6 +26,9 @@ public class DiamondPresenter : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Update the player point UI
+    /// </summary>
     private void UpdateView()
     {
         if (_diamond == null)
@@ -36,6 +39,9 @@ public class DiamondPresenter : MonoBehaviour
         _pointText.text = _diamond.CurrentPoint.ToString();
     }
 
+    /// <summary>
+    /// Call the event when the point is changed
+    /// </summary>
     private void OnPointChanged()
     {
         UpdateView();

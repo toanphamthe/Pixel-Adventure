@@ -8,6 +8,10 @@ public class Diamond : MonoBehaviour
     public event Action PointChanged;
     public int CurrentPoint { get; set; }
 
+    /// <summary>
+    /// Increase the player point
+    /// </summary>
+    /// <param name="value"></param>
     public void Increment(int value)
     {
         CurrentPoint += value;
@@ -15,6 +19,9 @@ public class Diamond : MonoBehaviour
         OnPointChanged();
     }
 
+    /// <summary>
+    /// Call the event when the point is changed
+    /// </summary>
     public void OnPointChanged()
     {
         PointChanged?.Invoke();

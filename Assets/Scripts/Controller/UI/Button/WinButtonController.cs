@@ -9,26 +9,43 @@ public class WinButtonController : MonoBehaviour
 
     private void Start()
     {
+        ReachTheMaxLevel();
+    }
+
+    /// <summary>
+    /// Hide the next button if the current level is the last level
+    /// </summary>
+    private void ReachTheMaxLevel()
+    {
         if (SceneManager.GetActiveScene().buildIndex == SceneManager.sceneCountInBuildSettings - 1)
         {
             _nextButtonObject.SetActive(false);
         }
     }
 
+    /// <summary>
+    /// Restart the current level
+    /// </summary>
     public void OnRestartButtonPressed()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        LoadingController.Instance.LoadScene(SceneManager.GetActiveScene().name);
         Time.timeScale = 1;
     }
 
+    /// <summary>
+    /// Go back to the main menu
+    /// </summary>
     public void OnMenuButtonPressed()
     {
-        SceneManager.LoadScene("Start");
+        LoadingController.Instance.LoadScene("Start");
     }
 
+    /// <summary>
+    /// Load the next level
+    /// </summary>
     public void OnNextButtonPressed()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        LoadingController.Instance.LoadScene("Lv_" + (SceneManager.GetActiveScene().buildIndex - 1).ToString());
         Time.timeScale = 1;
     }
 }

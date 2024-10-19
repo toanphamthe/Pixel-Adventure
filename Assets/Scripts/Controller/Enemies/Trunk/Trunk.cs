@@ -6,12 +6,16 @@ public class Trunk : Enemy
 {
     enum TrunkState { Idle, Patrol, Attack }
 
-    [SerializeField] private TrunkState _currentState;
+    [Header("Trunk Stats")]
     [SerializeField] private bool _isGrounded;
     [SerializeField] private bool _isFacingRight;
     [SerializeField] private float _groundCheckRadius;
-    [SerializeField] private LayerMask _groundLayer;
     [SerializeField] private float _idleTime;
+
+    [SerializeField] private TrunkState _currentState;
+
+    [SerializeField] private LayerMask _groundLayer;
+
     [SerializeField] private Transform _groundCheck;
 
     protected override void Awake()

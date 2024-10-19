@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class Mushroom : Enemy
 {
-    enum MushroomState
-    {
-        Idle,
-        Patrol,
-    }
+    enum MushroomState { Idle, Patrol }
 
-    [SerializeField] private MushroomState _currentState;
-    [SerializeField] private bool _isGrounded;
-    [SerializeField] private float _groundCheckRadius;
-    [SerializeField] private LayerMask _groundLayer;
-    [SerializeField] private Transform _groundCheck;
+    [Header("Mushroom Stats")]
     [SerializeField] private bool _isFacingRight;
     [SerializeField] private float _idleTime;
+    [SerializeField] private bool _isGrounded;
+    [SerializeField] private float _groundCheckRadius;
+
+    [SerializeField] private MushroomState _currentState;
+
+    [SerializeField] private LayerMask _groundLayer;
+
+    [SerializeField] private Transform _groundCheck;
 
     protected override void Awake()
     {
@@ -88,6 +88,9 @@ public class Mushroom : Enemy
         Flip();
     }
 
+    /// <summary>
+    /// Check the mushroom is grounded or not
+    /// </summary>
     private void GroundCheck()
     {
         Collider2D hit = Physics2D.OverlapCircle(_groundCheck.position, _groundCheckRadius, _groundLayer);

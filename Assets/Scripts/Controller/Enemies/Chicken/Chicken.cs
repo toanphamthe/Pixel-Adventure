@@ -5,17 +5,17 @@ using UnityEngine.EventSystems;
 
 public class Chicken : Enemy
 {
-    enum ChickenState
-    {
-        Idle,
-        Chase,
-    }
+    enum ChickenState { Idle, Chase }
+
+    [Header("Chicken Stats")]
+    [SerializeField] private float _moveDirection;
 
     [SerializeField] private ChickenState _currentState;
-    [SerializeField] private GameObject _chaseRange;
+
     [SerializeField] private LayerMask _playerLayer;
+    
     [SerializeField] private Player _player;
-    [SerializeField] private float _moveDirection;
+    [SerializeField] private GameObject _chaseRange;
     [SerializeField] private GameObject _chicken;
 
     protected override void Awake()
@@ -49,6 +49,9 @@ public class Chicken : Enemy
         }
     }
 
+    /// <summary>
+    /// Handle the chicken behavior
+    /// </summary>
     private void ChickenBehaviorHandler()
     {
         switch(_currentState)
@@ -62,6 +65,9 @@ public class Chicken : Enemy
         }
     }
 
+    /// <summary>
+    /// Move the enemy towards the player
+    /// </summary>
     private void Chase()
     {
         _rigidbody2D.velocity = new Vector2(_moveDirection * _moveSpeed, _rigidbody2D.velocity.y);
@@ -69,6 +75,9 @@ public class Chicken : Enemy
         _animator.SetBool("Run", true);
     }
 
+    /// <summary>
+    /// Stop the enemy's movement
+    /// </summary>
     private void Idle()
     {
         _animator.SetBool("Run", false);
@@ -91,6 +100,9 @@ public class Chicken : Enemy
         }
     }
 
+    /// <summary>
+    /// Check if the player is in the chase range
+    /// </summary>
     private void CheckPlayer()
     {
         Collider2D chase = Physics2D.OverlapBox(_chaseRange.transform.position, _chaseRange.transform.localScale, 0, _playerLayer);

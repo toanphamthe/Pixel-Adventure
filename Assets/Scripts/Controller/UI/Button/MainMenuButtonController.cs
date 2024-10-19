@@ -9,6 +9,14 @@ public class MainMenuButtonController : MonoBehaviour
 
     private void Start()
     {
+        LevelSelectionHandle();
+    }
+
+    /// <summary>
+    /// Handle the level selection
+    /// </summary>
+    private void LevelSelectionHandle()
+    {
         if (PlayerPrefs.GetInt("Lv_1_Unlocked", 0) == 0)
         {
             PlayerPrefs.SetInt("Lv_1_Unlocked", 1);
@@ -28,11 +36,14 @@ public class MainMenuButtonController : MonoBehaviour
         }
     }
 
-    public void StartGame(string level)
+    public void OnLevelButtonPressed(string sceneName)
     {
-        SceneManager.LoadScene("Lv_" + level);
+        LoadingController.Instance.LoadScene(sceneName);
     }
 
+    /// <summary>
+    /// Quit the game
+    /// </summary>
     public void QuitGame()
     {
         Application.Quit();

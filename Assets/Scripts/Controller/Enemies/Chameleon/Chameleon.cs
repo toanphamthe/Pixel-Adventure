@@ -4,22 +4,22 @@ using UnityEngine;
 
 public class Chameleon : Enemy
 {
-    enum ChameleonState
-    {
-        Idle,
-        Chase,
-        Attack
-    }
+    enum ChameleonState { Idle, Chase, Attack }
+
+    [Header("Chameleon Stats")]
+    [SerializeField] private float _moveDirection;
+    [SerializeField] private bool _isAttack;
+    [SerializeField] private float _attackDelayTime;
+
+    [SerializeField] private LayerMask _playerLayer;
+
     [SerializeField] private ChameleonState _currentState;
+
     [SerializeField] private GameObject _chameleon;
     [SerializeField] private GameObject _chaseRange;
     [SerializeField] private GameObject _attackRange;
     [SerializeField] private GameObject _attackTrigger;
-    [SerializeField] private LayerMask _playerLayer;
     [SerializeField] private Player _player;
-    [SerializeField] private float _moveDirection;
-    [SerializeField] private bool _isAttack;
-    [SerializeField] private float _attackDelayTime;
 
     protected override void Awake()
     {
@@ -51,6 +51,9 @@ public class Chameleon : Enemy
         }
     }
 
+    /// <summary>
+    /// Check if the player is colliding with the attack trigger and make the player take damage
+    /// </summary>
     private void AttackTrigger()
     {
         Collider2D attack = Physics2D.OverlapBox(_attackRange.transform.position, _attackRange.transform.localScale, 0, _playerLayer);

@@ -24,6 +24,9 @@ public class HealthPresenter : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Update the player health UI
+    /// </summary>
     private void UpdateView()
     {
         if (_health == null)
@@ -44,6 +47,9 @@ public class HealthPresenter : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Call the event when the health is changed
+    /// </summary>
     private void OnHealthChanged()
     {
         UpdateView();

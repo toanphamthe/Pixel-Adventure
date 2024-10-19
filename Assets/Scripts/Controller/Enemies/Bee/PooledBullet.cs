@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class PooledBullet : MonoBehaviour
 {
-    [SerializeField] private BulletPool _pool;
-    [SerializeField] private float _groundCheckDistance;
-    [SerializeField] private LayerMask _groundLayer;
+    [Header("Bullet Stats")]
     [SerializeField] private bool _isRelease;
+    [SerializeField] private float _groundCheckDistance;
+
+    [SerializeField] private LayerMask _groundLayer;
+
+    [SerializeField] private BulletPool _pool;
     [SerializeField] private Rigidbody2D _rigidbody;
     [SerializeField] private Animator _animator;
 
@@ -24,6 +27,9 @@ public class PooledBullet : MonoBehaviour
         GroundCheck();
     }
 
+    /// <summary>
+    /// Check if the bullet is on the ground
+    /// </summary>
     private void GroundCheck()
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, _groundCheckDistance, _groundLayer);
@@ -36,6 +42,9 @@ public class PooledBullet : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Release the bullet back to the pool
+    /// </summary>
     public void Release()
     {
         _rigidbody.gravityScale = 1;

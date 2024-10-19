@@ -1,22 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public interface IPlayerInput
 {
     float Horizontal { get; }
-    bool GetJumpKeyDown { get; }
+    bool GetJumpKeyDown { get; set; }
     void EnableInput();
     void DisableInput();
 }
 
 public class PlayerInput : MonoBehaviour, IPlayerInput
 {
-    [SerializeField] private KeyCode _jumpKey;
     [SerializeField] private bool _inputEnabled;
 
+    private PlayerControls _playerControls;
+
     public float Horizontal { get; private set; }
-    public bool GetJumpKeyDown { get; private set; }
+    public bool GetJumpKeyDown { get; set; }
+
+    private void Awake()
+    {
+        _playerControls = new PlayerControls();
+        _playerControls.Enable();
+
+        _playerControls.Player.Move.performed += ctx => Horizontal = ctx.ReadValue<float>();
+        _playerControls.Player.Jump.started += ctx => GetJumpKeyDown = true;
+        _playerControls.Player.Jump.canceled += ctx => GetJumpKeyDown = false;
+    }
 
     private void Start()
     {
@@ -28,6 +40,16 @@ public class PlayerInput : MonoBehaviour, IPlayerInput
         InputHandle();
     }
 
+    private void OnEnable()
+    {
+        _playerControls.Enable();
+    }
+
+    private void OnDisable()
+    {
+        _playerControls.Disable();
+    }
+
     /// <summary>
     /// Handle the player input
     /// </summary>
@@ -35,8 +57,7 @@ public class PlayerInput : MonoBehaviour, IPlayerInput
     {
         if (_inputEnabled)
         {
-            Horizontal = Input.GetAxisRaw("Horizontal");
-            GetJumpKeyDown = Input.GetKeyDown(_jumpKey);
+            
         }
         else
         {

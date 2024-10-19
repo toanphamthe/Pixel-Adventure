@@ -28,6 +28,7 @@ public class PlayerJumpState : IState
         _playerAnimation.PlayAnimation(jump);
         _playerMovement.Jump();
         _playerMovement.IsDoubleJump = true;
+        _playerInput.GetJumpKeyDown = false;
     }
 
     public void ExitState()

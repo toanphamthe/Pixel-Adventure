@@ -9,12 +9,15 @@ public class AngryPig : Enemy
     [Header("AngryPig Stats")]
     [SerializeField] private float _angrySpeed;
     [SerializeField] private float _idleTime;
-    [SerializeField] private GameObject _groundCheck;
     [SerializeField] private bool _isGrounded;
     [SerializeField] private bool _isFacingRight;
     [SerializeField] private float _groundCheckRadius;
-    [SerializeField] private LayerMask _groundLayer;
+
     [SerializeField] private AngryPigState _currentState;
+
+    [SerializeField] private LayerMask _groundLayer;
+
+    [SerializeField] private GameObject _groundCheck;
 
     protected override void Awake()
     {
@@ -22,7 +25,6 @@ public class AngryPig : Enemy
         _animator = GetComponentInChildren<Animator>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _boxCollider2D = GetComponent<BoxCollider2D>();
-
     }
 
     protected override void Start()

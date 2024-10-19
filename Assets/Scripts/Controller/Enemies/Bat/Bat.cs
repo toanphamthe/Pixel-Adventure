@@ -9,7 +9,9 @@ public class Bat : Enemy
 
     [Header("Bat Stats")]
     [SerializeField] private float _attackRange;
+
     [SerializeField] private BatState _currentState;
+
     [SerializeField] private Vector3 _startPosition;
     [SerializeField] private LayerMask _playerLayer;
 
@@ -18,8 +20,6 @@ public class Bat : Enemy
     [SerializeField] private GameObject _player;
     [SerializeField] private PlayerTakeDamage _playerTakeDamge;
     [SerializeField] private GameObject _batRootObject;
-
-    //[Header("Bat Components")]
 
     protected override void Awake()
     {

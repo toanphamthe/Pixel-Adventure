@@ -18,6 +18,9 @@ public class Health : MonoBehaviour
         Restore();
     }
 
+    /// <summary>
+    /// Increase the player health
+    /// </summary>
     public void Increment()
     {
         CurrentHealth++;
@@ -25,6 +28,9 @@ public class Health : MonoBehaviour
         OnHealthChanged();
     }
 
+    /// <summary>
+    /// Decrease the player health
+    /// </summary>
     public void Decrement()
     {
         CurrentHealth--;
@@ -37,12 +43,18 @@ public class Health : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Restore the player health
+    /// </summary>
     public void Restore()
     {
         CurrentHealth = MaxHealth;
         OnHealthChanged();
     }
 
+    /// <summary>
+    /// Call the event when the health is changed
+    /// </summary>
     public void OnHealthChanged()
     {
         HealthChanged?.Invoke();

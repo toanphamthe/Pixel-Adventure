@@ -5,6 +5,7 @@ using UnityEngine;
 public class BulletPool : MonoBehaviour
 {
     [SerializeField] private uint _initPoolSize;
+
     [SerializeField] private PooledBullet _objectToPool;
     [SerializeField] private GameObject _parent;
 

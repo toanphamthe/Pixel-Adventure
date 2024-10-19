@@ -5,23 +5,24 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour, IEnemyDie
 {
-    [Header("Stats")]
+    [Header("Enemy Stats")]
     [SerializeField] protected float _moveSpeed;
     [SerializeField] protected int _coins;
     [SerializeField] protected bool _isDead;
     [SerializeField] protected float _destroyDelayTime;
 
+    [Header("Knockback")]
     [SerializeField] private float _angleInDegrees;
     [SerializeField] private float _knockBackForce;
     [SerializeField] private float _rotateSpeed;
-
-    [SerializeField] protected ICameraShake _shake;
 
     [Header("Components")]
     [SerializeField] protected Rigidbody2D _rigidbody2D;
     [SerializeField] protected BoxCollider2D _boxCollider2D;
     [SerializeField] protected SpriteRenderer _spriteRenderer;
     [SerializeField] protected Animator _animator;
+
+    protected ICameraShake _shake;
 
     protected abstract void Awake();
 
@@ -45,7 +46,7 @@ public abstract class Enemy : MonoBehaviour, IEnemyDie
     }
 
     /// <summary>
-    /// Applie a rotate effect to the enemy after it die.
+    /// Applie a rotate effect to the enemy after it die
     /// </summary>
     protected virtual void RotateEffect()
     {

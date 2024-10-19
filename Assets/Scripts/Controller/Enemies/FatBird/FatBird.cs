@@ -4,23 +4,23 @@ using UnityEngine;
 
 public class FatBird : Enemy
 {
-    enum FatBirdState
-    {
-        Idle,
-        Fall,
-    }
+    enum FatBirdState { Idle, Fall }
+
+    [Header("FatBird Stats")]
+    [SerializeField] private int _targetPoint;
+    [SerializeField] private float _playerCheckDistance;
+    [SerializeField] private float _groundCheckDistance;
+    [SerializeField] private float _isGroundTime;
+    [SerializeField] private bool _isShake;
 
     [SerializeField] private FatBirdState _currentState;
+
+    [SerializeField] private LayerMask _playerLayer;
+    [SerializeField] private LayerMask _groundLayer;
+
     [SerializeField] private GameObject _fatBird;
     [SerializeField] private GameObject[] _points;
     [SerializeField] private GameObject _raycast;
-    [SerializeField] private int _targetPoint;
-    [SerializeField] private float _playerCheckDistance;
-    [SerializeField] private LayerMask _playerLayer;
-    [SerializeField] private float _groundCheckDistance;
-    [SerializeField] private LayerMask _groundLayer;
-    [SerializeField] private float _isGroundTime;
-    [SerializeField] private bool _isShake;
 
     protected override void Awake()
     {

@@ -62,5 +62,8 @@ Scenes/: Game scenes.
 Scripts/: C# scripts that control game logic.
 Prefabs/: Prefabricated game objects.
 
+Author Assests:
+Art: https://pixelfrog-assets.itch.io/
+Sounds: https://swarajthegreat.itch.io/
 Contact
 If you have any questions or would like to contribute to the project, please contact me at toanphamthe.work@gmail.com.

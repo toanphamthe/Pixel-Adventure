@@ -7,7 +7,7 @@ public class CameraShake : MonoBehaviour, ICameraShake
     [SerializeField] private Animator _cameraAnimator;
 
     /// <summary>
-    /// Camera shake effect
+    /// Call camera shake effect animator
     /// </summary>
     public void Shake()
     {

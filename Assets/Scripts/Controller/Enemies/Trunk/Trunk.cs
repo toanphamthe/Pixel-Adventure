@@ -47,6 +47,9 @@ public class Trunk : Enemy
         }
     }
 
+    /// <summary>
+    /// Handle the trunk behavior
+    /// </summary>
     private void BehaviorHandle()
     {
         if (_currentState == TrunkState.Patrol && !_isGrounded)
@@ -60,6 +63,9 @@ public class Trunk : Enemy
         }
     }
 
+    /// <summary>
+    /// Trunk patrol state
+    /// </summary>
     private void Patrol()
     {
         if (_isFacingRight)
@@ -96,6 +102,9 @@ public class Trunk : Enemy
         Flip();
     }
 
+    /// <summary>
+    /// Check if the trunk is grounded
+    /// </summary>
     private void GroundCheck()
     {
         _isGrounded = Physics2D.OverlapCircle(_groundCheck.transform.position, _groundCheckRadius, _groundLayer);

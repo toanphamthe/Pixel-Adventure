@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Panel/Pause.unity
     guid: 9d80394b64bd6874ab84947e0b85c618
   - enabled: 1
+    path: Assets/Scenes/Panel/Lose.unity
+    guid: 9762fe7b4b512be43ab3270639bbed4c
+  - enabled: 1
     path: Assets/Scenes/Panel/Win.unity
     guid: 7a3446ce73ffda643b94ffb6f0a1ac1c
   - enabled: 1

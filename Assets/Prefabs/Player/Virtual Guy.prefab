@@ -15121,6 +15121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveSpeed: 9
   _jumpForce: 16
+  _jumpSFX: {fileID: 8300000, guid: 2f7f2b137a8518d4fad2e81f992e5f61, type: 3}
   _isGround: 0
   _groundCheckDistance: 0.25
   _groundLayer:
@@ -15178,6 +15179,7 @@ MonoBehaviour:
   _forceDirection: {x: 0, y: 0}
   _rotateSpeed: 0
   _drawGizmos: 1
+  _damageSound: {fileID: 8300000, guid: 09d5913c0ca39864caa79801982d560a, type: 3}
 --- !u!114 &315774401606045764
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -29,6 +29,7 @@ public class WinButtonController : MonoBehaviour
     public void OnRestartButtonPressed()
     {
         LoadingController.Instance.LoadScene(SceneManager.GetActiveScene().name);
+        SoundManager.Instance.DecreaseBackgroundVolumeEffect(SceneManager.GetActiveScene().name);
         Time.timeScale = 1;
     }
 
@@ -38,6 +39,7 @@ public class WinButtonController : MonoBehaviour
     public void OnMenuButtonPressed()
     {
         LoadingController.Instance.LoadScene("Start");
+        SoundManager.Instance.DecreaseBackgroundVolumeEffect("Start");
     }
 
     /// <summary>
@@ -45,7 +47,8 @@ public class WinButtonController : MonoBehaviour
     /// </summary>
     public void OnNextButtonPressed()
     {
-        LoadingController.Instance.LoadScene("Lv_" + (SceneManager.GetActiveScene().buildIndex - 1).ToString());
+        LoadingController.Instance.LoadScene("Lv_" + (SceneManager.GetActiveScene().buildIndex - 2).ToString());
+        SoundManager.Instance.DecreaseBackgroundVolumeEffect("Lv_" + (SceneManager.GetActiveScene().buildIndex - 2).ToString());
         Time.timeScale = 1;
     }
 }

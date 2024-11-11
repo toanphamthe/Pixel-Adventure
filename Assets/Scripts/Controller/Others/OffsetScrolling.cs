@@ -29,6 +29,11 @@ public class OffsetScrolling : MonoBehaviour
 
     void Update()
     {
+        Scrolling();
+    }
+
+    private void Scrolling()
+    {
         transform.position -= new Vector3(_horizontalScrollSpeed * Time.deltaTime, _verticalScrollSpeed * Time.deltaTime, 0);
 
         // Scrolling down

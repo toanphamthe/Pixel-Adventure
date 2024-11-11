@@ -11,7 +11,7 @@ public class PlayerSkinSelection : MonoBehaviour
 
     private void Awake()
     {
-        _playerSkinIndex = PlayerPrefs.GetInt("PlayerSkinIndex", 0);
+        _playerSkinIndex = PlayerPrefs.GetInt(PlayerPrefsKeys.PlayerSkinIndex, 0);
     }
 
     private void Update()
@@ -37,7 +37,7 @@ public class PlayerSkinSelection : MonoBehaviour
 
     private void UpdateSelectSkinText()
     {
-        if (_playerSkinIndex == PlayerPrefs.GetInt("PlayerSkinIndex"))
+        if (_playerSkinIndex == PlayerPrefs.GetInt(PlayerPrefsKeys.PlayerSkinIndex))
         {
             _selectText.text = "Selected";
         }
@@ -49,8 +49,7 @@ public class PlayerSkinSelection : MonoBehaviour
 
     public void SelectSkin()
     {
-        PlayerPrefs.SetInt("PlayerSkinIndex", _playerSkinIndex);
-        Debug.Log("PlayerSkinIndex: " + PlayerPrefs.GetInt("PlayerSkinIndex"));
+        PlayerPrefs.SetInt(PlayerPrefsKeys.PlayerSkinIndex, _playerSkinIndex);
         _selectText.text = "Selected";
     }    
 

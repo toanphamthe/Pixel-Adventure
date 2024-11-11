@@ -10,6 +10,7 @@ public abstract class Enemy : MonoBehaviour, IEnemyDie
     [SerializeField] protected int _coins;
     [SerializeField] protected bool _isDead;
     [SerializeField] protected float _destroyDelayTime;
+    [SerializeField] protected AudioClip _damageSound;
 
     [Header("Knockback")]
     [SerializeField] private float _angleInDegrees;
@@ -41,6 +42,7 @@ public abstract class Enemy : MonoBehaviour, IEnemyDie
         _isDead = true;
         _rigidbody2D.gravityScale = 3;
         _shake.Shake();
+        SoundManager.Instance.PlaySFX(_damageSound);
         KnockBack();
         Destroy(gameObject, _destroyDelayTime);
     }

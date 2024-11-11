@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour, IPlayerMoveable
     [Header("Movement Stats")]
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _jumpForce;
+    [SerializeField] private AudioClip _jumpSFX;
 
     [Header("Ground Check")]
     [SerializeField] private bool _isGround;
@@ -110,6 +111,7 @@ public class PlayerMovement : MonoBehaviour, IPlayerMoveable
     {
         _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpForce);
         _player.jumpPS.Play();
+        SoundManager.Instance.PlaySFX(_jumpSFX);
     }
 
     /// <summary>
@@ -122,6 +124,7 @@ public class PlayerMovement : MonoBehaviour, IPlayerMoveable
         _wallJumpDirection = -transform.localScale.x;
         _rigidbody2D.velocity = new Vector2(_wallJumpDirection * _wallJumpForce, _wallJumpForce * _forceMultipier);
         _player.jumpPS.Play();
+        SoundManager.Instance.PlaySFX(_jumpSFX);
         Invoke(nameof(ResetWallJump), 0.2f);
     }
 

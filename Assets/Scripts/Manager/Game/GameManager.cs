@@ -56,8 +56,19 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadSceneAsync("Win", LoadSceneMode.Additive);
         }
 
-        PlayerPrefs.SetInt("Lv_" + level.ToString() + "_Completed", 1);
-        PlayerPrefs.SetInt("Lv_" + (level + 1).ToString() + "_Unlocked", 1);
+        PlayerPrefs.SetInt(PlayerPrefsKeys.LevelCompletedKey(level), 1);
+        PlayerPrefs.SetInt(PlayerPrefsKeys.LevelUnlockedKey(level + 1), 1);
+
+        Diamond diamond = GameObject.FindGameObjectWithTag("Player").GetComponent<Diamond>();
+        if (diamond != null)
+        {
+            PlayerPrefs.SetInt(PlayerPrefsKeys.Diamonds, diamond.CurrentPoint);
+        }
+        else
+        {
+            Debug.LogError("Diamond not found");
+        }
+
         PlayerPrefs.Save();
     }
 
@@ -66,6 +77,6 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void LoseGame()
     {
-        Debug.Log("Lose");
+        SceneManager.LoadSceneAsync("Lose", LoadSceneMode.Additive);
     }
 }

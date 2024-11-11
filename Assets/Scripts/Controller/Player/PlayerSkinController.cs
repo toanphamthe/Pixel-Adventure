@@ -12,12 +12,12 @@ public class PlayerSkinController : MonoBehaviour
     private void Awake()
     {
         _followCamera = GameObject.Find("CM Follow Cam").GetComponent<CinemachineVirtualCamera>();
-        _playerSkinIndex = PlayerPrefs.GetInt("PlayerSkinIndex", 0);
+        _playerSkinIndex = PlayerPrefs.GetInt(PlayerPrefsKeys.PlayerSkinIndex, 0);
     }
 
     private void Start()
     {
-        _playerSkin[PlayerPrefs.GetInt("PlayerSkinIndex")].SetActive(true);
+        _playerSkin[PlayerPrefs.GetInt(PlayerPrefsKeys.PlayerSkinIndex)].SetActive(true);
         _followCamera.Follow = _playerSkin[_playerSkinIndex].transform;
     }
 }

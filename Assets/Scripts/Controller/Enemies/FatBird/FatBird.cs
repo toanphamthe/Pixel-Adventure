@@ -51,6 +51,9 @@ public class FatBird : Enemy
         }
     }
 
+    /// <summary>
+    /// Handle the fat bird behavior
+    /// </summary>
     private void FatBirdBehaviorHandler()
     {
         switch (_currentState)
@@ -64,6 +67,9 @@ public class FatBird : Enemy
         }
     }
 
+    /// <summary>
+    /// Stop the fat bird when it reach the target point
+    /// </summary>
     private void Idle()
     {
         if (Vector2.Distance(transform.position, _points[_targetPoint].transform.position) < 0.1f)
@@ -83,6 +89,9 @@ public class FatBird : Enemy
         }
     }
 
+    /// <summary>
+    /// Handle the fat bird fall behavior
+    /// </summary>
     private void Fall()
     {
         _animator.SetBool("Fall", true);
@@ -100,6 +109,9 @@ public class FatBird : Enemy
         }
     }
 
+    /// <summary>
+    /// Check if the player is in the chase range
+    /// </summary>
     private void CheckPlayer()
     {
         RaycastHit2D ray = Physics2D.Raycast(_raycast.transform.position, Vector2.down, _playerCheckDistance, _playerLayer);
@@ -109,6 +121,11 @@ public class FatBird : Enemy
         }
     }
 
+    /// <summary>
+    /// Handle the fat bird idle time
+    /// </summary>
+    /// <param name="time"></param>
+    /// <returns></returns>
     private IEnumerator IdleDelay(float time)
     {
         yield return new WaitForSeconds(time);

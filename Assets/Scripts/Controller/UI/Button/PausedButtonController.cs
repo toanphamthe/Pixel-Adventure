@@ -12,6 +12,7 @@ public class PausedButtonController : MonoBehaviour
     {
         SceneManager.UnloadSceneAsync("Pause");
         Time.timeScale = 1;
+        OnSoundButtonPressed();
     }
 
     /// <summary>
@@ -24,6 +25,7 @@ public class PausedButtonController : MonoBehaviour
             SceneManager.LoadSceneAsync("Pause", LoadSceneMode.Additive);
             Time.timeScale = 0;
         }
+        OnSoundButtonPressed();
     }
 
     /// <summary>
@@ -32,7 +34,9 @@ public class PausedButtonController : MonoBehaviour
     public void OnRestartButtonPressed()
     {
         LoadingController.Instance.LoadScene(SceneManager.GetActiveScene().name);
+        SoundManager.Instance.DecreaseBackgroundVolumeEffect(SceneManager.GetActiveScene().name);
         Time.timeScale = 1;
+        OnSoundButtonPressed();
     }
 
     /// <summary>
@@ -42,5 +46,12 @@ public class PausedButtonController : MonoBehaviour
     {
         Time.timeScale = 1;
         LoadingController.Instance.LoadScene("Start");
+        OnSoundButtonPressed();
+        SoundManager.Instance.DecreaseBackgroundVolumeEffect("Start");
+    }
+
+    public void OnSoundButtonPressed()
+    {
+        SoundManager.Instance.PlayButtonSFX();
     }
 }

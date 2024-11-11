@@ -1064,6 +1064,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 975781226}
+        m_TargetAssemblyTypeName: PausedButtonController, Assembly-CSharp
+        m_MethodName: OnSoundButtonPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &955043039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1116,7 +1128,7 @@ GameObject:
   - component: {fileID: 975781222}
   - component: {fileID: 975781226}
   m_Layer: 5
-  m_Name: Paused Canvas
+  m_Name: Pause Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1861,7 +1873,7 @@ GameObject:
   - component: {fileID: 1950041391}
   - component: {fileID: 1950041390}
   m_Layer: 5
-  m_Name: Options
+  m_Name: Options Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1959,6 +1971,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 975781226}
+        m_TargetAssemblyTypeName: PausedButtonController, Assembly-CSharp
+        m_MethodName: OnSoundButtonPressed
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

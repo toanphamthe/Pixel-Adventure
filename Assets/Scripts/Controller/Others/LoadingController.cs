@@ -10,8 +10,7 @@ public class LoadingController : MonoBehaviour
 {
     public static LoadingController Instance { get; private set; }
 
-    [SerializeField] private GameObject _loadingCanvas;
-    [SerializeField] private Slider _loadingSlider;
+    [SerializeField] private Animator _loadingAnimator;
     [SerializeField] private float _sceneProgress;
 
     private void Awake()
@@ -29,13 +28,17 @@ public class LoadingController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Load async a scene with a loading animation.
+    /// </summary>
+    /// <param name="sceneName"></param>
     public async void LoadScene(string sceneName)
     {
-        _loadingSlider.value = 0;
         _sceneProgress = 0;
         var scene = SceneManager.LoadSceneAsync(sceneName);
+        _loadingAnimator.SetTrigger("start");
         scene.allowSceneActivation = false;
-        _loadingCanvas.SetActive(true);
+        await Task.Delay(1000);
 
         do
         {
@@ -43,14 +46,9 @@ public class LoadingController : MonoBehaviour
             _sceneProgress = scene.progress;
         }
         while (scene.progress < 0.9f);
+
         await Task.Delay(1000);
         scene.allowSceneActivation = true;
-        await Task.Delay(1000);
-        _loadingCanvas.SetActive(false);
-    }
-
-    private void Update()
-    {
-        _loadingSlider.value = Mathf.MoveTowards(_loadingSlider.value, _sceneProgress, Time.deltaTime);
+        _loadingAnimator.SetTrigger("end");
     }
 }

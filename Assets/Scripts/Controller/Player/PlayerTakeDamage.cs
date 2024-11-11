@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static UnityEditor.Experimental.GraphView.GraphView;
 
 public interface IPlayerDamageable
@@ -21,6 +22,7 @@ public class PlayerTakeDamage : MonoBehaviour, IPlayerDamageable
     [SerializeField] private Vector2 _forceDirection;
     [SerializeField] private float _rotateSpeed;
     [SerializeField] private bool _drawGizmos;
+    [SerializeField] private AudioClip _damageSound;
 
     private PlayerInput _playerInput;
     private Player _player;
@@ -55,6 +57,7 @@ public class PlayerTakeDamage : MonoBehaviour, IPlayerDamageable
         _health.Decrement();
         StartCoroutine(Respawn(_respawnDelayTime));
         _shake.Shake();
+        SoundManager.Instance.PlaySFX(_damageSound);
     }
 
     /// <summary>
@@ -62,7 +65,7 @@ public class PlayerTakeDamage : MonoBehaviour, IPlayerDamageable
     /// </summary>
     public void Die()
     {
-
+        GameManager.Instance.LoseGame();
     }
 
     /// <summary>
